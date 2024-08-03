@@ -47,7 +47,7 @@ export const File: React.FC<Props> = ({data}) => {
         zoom: 0.7,
     };
 
-    const [cy, setCy] = useState<Core | null>(null);
+    const [cy, setCy] = useState<any>(null);
 
     useEffect(() => {
         if (cy) {
