@@ -1,7 +1,8 @@
 "use client"
 
 import React, {useState, useEffect} from 'react';
-import cytoscape, {Core} from 'cytoscape';
+import jquery from 'jquery';
+import cytoscape from 'cytoscape';
 import CytoscapeComponent from "react-cytoscapejs";
 import dagre from "cytoscape-dagre";
 import fcose from "cytoscape-fcose";
@@ -21,9 +22,11 @@ import {pairsByClusterShaDataRequest, pairByIdDataRequest} from '@/api/server-da
 import {fileCytoscape} from './utils';
 import {Legend} from './legends';
 
+//expandCollapse(cytoscape, jquery);
 cytoscape.use(dagre);
 cytoscape.use(cola);
 cytoscape.use(fcose);
+cytoscape.use(undoRedo);
 cytoscape.use(expandCollapse);
 cytoscape.use(popper);
 cytoscape.use(navigator);
@@ -77,11 +80,11 @@ export const Cluster: React.FC<ClusterProps> = ({data, clusterId}) => {
         zoom: 0.7,
     };
 
-    const [cy, setCy] = useState<Core | null>(null);
+    const [cy, setCy] = useState<any>(null);
 
     useEffect(() => {
         if (cy) {
-            const api = cy.expandCollapse({
+            cy.expandCollapse({
                 layoutBy: {
                     name: "preset",
                     randomize: true,
