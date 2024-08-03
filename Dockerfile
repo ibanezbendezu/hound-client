@@ -14,7 +14,7 @@ RUN npm install --legacy-peer-deps
 COPY . .
 
 # Build the application
-RUN npm build
+RUN npm run build
 
 # Expose the port
 EXPOSE 3000
