@@ -21,9 +21,7 @@ import useStore from "@/store/clusters";
 import useCart from '@/store/repos';
 import {AddDialog} from "./add-dialog"
 import AddForm from "./add-form";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { TooltipHint } from "@/components/tooltip-hint";
-
+import {TooltipHint} from "@/components/tooltip-hint";
 
 export const Cart = () => {
     //CORREGIR LOS NOMBRES DE LAS FUNCIONES

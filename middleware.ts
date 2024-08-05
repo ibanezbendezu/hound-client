@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getSession, profile, refresh } from './api/auth';
+import { getSession } from './api/auth';
 
 export async function middleware(req: NextRequest) {
     const session = await getSession();

@@ -18,9 +18,7 @@ export const ClusterList = () => {
 
     if (clusters === undefined) {
         return (
-            <>
-                <Item.Skeleton/>
-            </>
+            <Item.Skeleton/>
         );
     }
 

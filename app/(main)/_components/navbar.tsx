@@ -1,6 +1,6 @@
 "use client";
 
-import {useParams, usePathname} from "next/navigation";
+import {usePathname} from "next/navigation";
 import {MenuIcon} from "lucide-react";
 import Breadcrumbs from "@/components/breadcrumbs";
 
@@ -10,7 +10,6 @@ interface NavbarProps {
 }
 
 export const Navbar = ({isCollapsed, onResetWidth}: NavbarProps) => {
-    const params = useParams();
     const pathname = usePathname();
 
     return (

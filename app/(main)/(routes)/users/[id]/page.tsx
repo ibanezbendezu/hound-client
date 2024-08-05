@@ -16,7 +16,7 @@ import {profileDataRequest} from '@/api/server-data';
 
 export default function UserPage({params}: { params: any }) {
 
-    const [userProfile, setUserProfile] = useState(null);
+    const [userProfile, setUserProfile] = useState<null | any>(null);
     const [repos, setRepos] = useState([]);
     const [loading, setLoading] = useState(true);
 

@@ -1,5 +1,9 @@
 import React from "react";
 
+/**
+ * customStyles for react-select
+ * @see https://react-select.com/styles
+ */
 export const customStyles = {
     control: (provided: any) => ({
         ...provided,

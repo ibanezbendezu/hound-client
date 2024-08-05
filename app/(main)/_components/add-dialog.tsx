@@ -17,7 +17,7 @@ interface AddDialogProps {
     description?: string;
 }
 
-export function AddDialog({children, isOpen, setIsOpen, title, description}: AddDialogProps) {
+export function AddDialog({children, isOpen, setIsOpen, title, description}: Readonly<AddDialogProps>) {
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogContent className="max-w-xl">

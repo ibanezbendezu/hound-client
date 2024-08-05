@@ -9,19 +9,16 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {ChevronsLeftRight} from "lucide-react";
-import {LogOut} from "lucide-react";
+import {ChevronsLeftRight,LogOut} from "lucide-react";
 import {useAuthStore} from "@/store/auth";
 
 export const UserItem = () => {
     const user = useAuthStore((state) => state.profile);
-    const storeLogout = useAuthStore((state) => state.logout);
 
-    const handleLogout = () => {
-        return () => {
+    const handleLogout = async () => {
 
-        };
     };
+
 
     return (
         <DropdownMenu>
@@ -69,7 +66,7 @@ export const UserItem = () => {
                 </div>
                 <DropdownMenuSeparator/>
                 <DropdownMenuItem>
-                    <div className="flex items-center" onClick={handleLogout()}>
+                    <div className="flex items-center" onClick={handleLogout}>
                         <LogOut className="text-xs"/>
                         <DropdownMenuLabel className="text-xs">Logout</DropdownMenuLabel>
                     </div>

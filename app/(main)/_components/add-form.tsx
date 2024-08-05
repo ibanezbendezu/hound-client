@@ -33,7 +33,7 @@ interface AddFormProps {
     cartCollapse: () => void;
 }
 
-export default function AddForm({setIsOpen, cartCollapse}: AddFormProps) {
+export default function AddForm({setIsOpen, cartCollapse}: Readonly<AddFormProps>) {
     const router = useRouter();
     const {profile} = useAuthStore(state => state);
     const {cart, emptyCart} = useCart(state => state);
@@ -43,7 +43,7 @@ export default function AddForm({setIsOpen, cartCollapse}: AddFormProps) {
     const [alertType, setAlertType] = useState(0);
     const [reposToAdd, setReposToAdd] = useState<any[]>([]);
     const [clusterSha, setClusterSha] = useState('');
-    const [isBUttonDisabled, setIsButtonDisabled] = useState(true);
+    const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -80,7 +80,6 @@ export default function AddForm({setIsOpen, cartCollapse}: AddFormProps) {
             setAlertType(2);
             setShowAlert(true);
             setIsButtonDisabled(false);
-            return;
         } else if (existingRepos.length > 0) {
             setReposToAdd([...reposToAdd, ...prevRepos]);
             setAlertType(3);
@@ -158,7 +157,7 @@ export default function AddForm({setIsOpen, cartCollapse}: AddFormProps) {
                 <div className="flex w-full sm:justify-end mt-4">
                     <Button
                         type="submit"
-                        disabled={isLoading || !isBUttonDisabled}
+                        disabled={isLoading || !isButtonDisabled}
                         className="w-full sm:w-auto"
                     >
                         <>
