@@ -6,7 +6,7 @@ import Link from "next/link";
 export const Heading = () => {
 
     return (
-        <div className="flex flex-col items-start max-w-3xl space-y-4 w-1/2 px-24">
+        <div className="flex flex-col items-start max-w-3xl space-y-4 px-24">
             <h1 className="text-left text-2xl sm:text-4xl md:text-5xl font-bold">
                 Tu aliado en la detección de similitudes entre códigos fuente, {" "}
                 <span className="underline text-muted-foreground">Hound.</span>
