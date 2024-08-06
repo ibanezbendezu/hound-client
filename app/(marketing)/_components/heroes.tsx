@@ -6,15 +6,15 @@ export const Heroes = () => {
             <div className="flex items-center">
                 <div className="relative w-[120px] h-[120px] sm:w-[145px] sm:h-[145px] md:w-[180px] md:h-[180px]">
                     <Image
-                        src="/mascot.png"
+                        src="/u1f415-g-bw.svg"
                         fill
                         className="object-contain dark:hidden"
                         alt="Mascot"
                     />
                     <Image
-                        src="/mascot.png"
+                        src="/u1f415-g-bw.svg"
                         fill
-                        className="object-contain hidden dark:block"
+                        className="object-contain hidden dark:block filter invert"
                         alt="Mascot"
                     />
                 </div>

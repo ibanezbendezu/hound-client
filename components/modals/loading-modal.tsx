@@ -3,6 +3,7 @@
 import {Dialog, DialogContent, DialogHeader} from "@/components/loading-dialog";
 import {useLoading} from "@/hooks/use-loading";
 import {Spinner} from "../spinner";
+import Image from "next/image";
 
 export const LoadingModal = () => {
     const loading = useLoading();
@@ -14,7 +15,20 @@ export const LoadingModal = () => {
                     <div className="flex items-center justify-center">
                         <h2 className="text-lg font-medium">Comparando repositorios...</h2>
                         <img src="/logo-dark.svg" alt="Hound" className="w-8 h-8 hidden dark:block ml-2"/>
-                        <img src="/logo.svg" alt="Hound" className="w-8 h-8 dark:hidden ml-2"/>
+                        <Image
+                            src="/u1f436-g-bw.svg"
+                            height={40}
+                            width={40}
+                            alt="Logo"
+                            className="dark:hidden"
+                        />
+                        <Image
+                            src="/u1f436-g-bw.svg"
+                            height={40}
+                            width={40}
+                            alt="Logo"
+                            className="hidden dark:block filter invert"
+                        />
                     </div>
                 </DialogHeader>
                 <div className="flex items-center justify-center">

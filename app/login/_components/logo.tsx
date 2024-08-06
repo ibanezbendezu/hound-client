@@ -6,18 +6,18 @@ export const Logo = () => {
         <div className="hidden md:flex items-center gap-x-2 pl-14">
             <Link href="/">
                 <Image
-                    src="/logo.svg"
+                    src="/u1f436-g-bw.svg"
                     height={40}
                     width={40}
                     alt="Logo"
                     className="dark:hidden"
                 />
                 <Image
-                    src="/logo-dark.svg"
+                    src="/u1f436-g-bw.svg"
                     height={40}
                     width={40}
                     alt="Logo"
-                    className="hidden dark:block"
+                    className="hidden dark:block filter invert"
                 />
             </Link>
         </div>
