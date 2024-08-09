@@ -12,7 +12,7 @@ import {formatMemberSince} from "@/lib/utils";
 import Repos from "../_components/repos";
 import {Spinner} from "@/components/spinner";
 import {Button} from "@/components/ui/button";
-import {profileDataRequest} from '@/api/server-data';
+import {ownerDataRequest, profileDataRequest} from '@/api/server-data';
 
 export default function UserPage({params}: { params: any }) {
 
@@ -23,10 +23,14 @@ export default function UserPage({params}: { params: any }) {
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await profileDataRequest(params.id);
+            /* const data = await profileDataRequest(params.id);
             const {userProfile, repos: fetchedRepos} = data;
             setRepos(fetchedRepos);
-            setUserProfile(userProfile);
+            setUserProfile(userProfile); */
+            const res = await ownerDataRequest(params.id);
+            const {ownerProfile, repos} = res;
+            setRepos(repos);
+            setUserProfile(ownerProfile);
             setLoading(false);
         };
 

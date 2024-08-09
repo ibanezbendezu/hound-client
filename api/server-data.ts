@@ -17,6 +17,22 @@ export const profileDataRequest = async (username: string) => {
     }
 }
 
+export const ownerDataRequest = async (owner: string) => {
+    try {
+        const res = await axios.get(`/github/profile/${owner}`);
+        let {ownerProfile, repos} = res.data;
+
+        repos.sort((a: { created_at: string | number | Date; }, b: {
+            created_at: string | number | Date;
+        }) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+        return {ownerProfile, repos};
+    } catch (error) {
+        console.error("Error fetching owner data:", error);
+        throw error;
+    }
+}
+
 export const clusterDataRequestBySha = async (sha: string) => {
     try {
         const res = await axios.get(`/clusters/sha/${sha}`);
