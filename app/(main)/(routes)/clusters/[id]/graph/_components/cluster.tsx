@@ -77,13 +77,14 @@ export const Cluster: React.FC<ClusterProps> = ({data, clusterId}) => {
             nodeSeparation: 70,
             idealEdgeLength: 130,
         },
-        zoom: 0.7,
+        zoom: 0.5,
     };
 
     const [cy, setCy] = useState<any>(null);
 
     useEffect(() => {
         if (cy) {
+            cy.zoom(config.zoom);
             cy.expandCollapse({
                 layoutBy: {
                     name: "preset",

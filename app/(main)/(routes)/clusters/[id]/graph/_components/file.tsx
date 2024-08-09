@@ -92,7 +92,7 @@ export const File: React.FC<Props> = ({data}) => {
                 wheelSensitivity={0.1}
                 zoomingEnabled={true}
                 zoom={config.zoom}
-                style={{height: "100vh" as React.CSSProperties['height'], width: "100%"}}
+                style={{width: "100%", height: "100%"}}
             />
         </>
     );

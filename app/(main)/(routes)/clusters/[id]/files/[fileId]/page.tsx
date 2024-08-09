@@ -25,6 +25,7 @@ import React from "react";
 import {Progress} from "@/components/ui/progress";
 import {Badge} from "@/components/ui/badge";
 import {colorScale} from "@/lib/utils";
+import { set } from "lodash";
 
 interface CodeViewerProps {
     code: string;
@@ -57,6 +58,10 @@ export default function FilePage({params}: { params: any }) {
     }, []);
 
     const handleValueChange = async (value: any) => {
+        setPairFile(null);
+        setSimilarity(0);
+        setFileFragments([]);
+        
         const pairFile = value.file;
         const pairFileContent = await fileContentRequest(pairFile.id);
 

@@ -33,6 +33,7 @@ export function PairDialog({
 
     useEffect(() => {
         const fetchData = async () => {
+            //setLoading(true);
             if (pair && pair.file1 && pair.file2) {
                 const file1Content = await fileContentRequest(pair.file1.id);
                 const f1c = file1Content.data;
@@ -42,6 +43,7 @@ export function PairDialog({
                 setFile1Content(f1c);
                 setFile2Content(f2c);
             }
+            //setLoading(false);
         };
         fetchData();
     }, [pair]);
@@ -80,21 +82,27 @@ export function PairDialog({
                         <div className="grid grid-cols-2 gap-3">
                             <div className="space-y-4">
                                 <div className="flex justify-between items-center gap-2">
-                                    <p className="font-mono text-xs">{pair.file1?.filepath}</p>
-                                    <Badge variant='secondary'>
+                                    <p className="font-mono text-xs max-w-md truncate">{pair.file1?.filepath}</p>
+                                    <Badge variant='secondary' className='max-w-xs truncate'>
                                         {pair.file1.repository.name}
                                     </Badge>
                                 </div>
-                                <div className="space-y-2">
-                                    <CodeViewer code={file1Content} language={pair.file1?.language}
-                                                highlightRange={pair.file1?.fragments} color={"#4d4d4d"}
-                                                shouldScrollY={true}/>
-                                </div>
+                                {loading ? (
+                                    <div className="h-48 flex items-center justify-center">
+                                        <Spinner size="lg"/>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-2">
+                                        <CodeViewer code={file1Content} language={pair.file1?.language}
+                                                    highlightRange={pair.file1?.fragments} color={"#4d4d4d"}
+                                                    shouldScrollY={true}/>
+                                    </div>
+                                )}
                             </div>
                             <div className="space-y-4">
                                 <div className="flex justify-between items-center gap-2">
-                                    <p className="font-mono text-xs">{pair.file2?.filepath}</p>
-                                    <Badge variant='secondary'>
+                                    <p className="font-mono text-xs  max-w-md truncate">{pair.file2?.filepath}</p>
+                                    <Badge variant='secondary' className='max-w-xs truncate'>
                                         {pair.file2.repository.name}
                                     </Badge>
                                 </div>

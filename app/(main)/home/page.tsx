@@ -36,7 +36,7 @@ const Home = () => {
                 </p>
                 <ArrowUp className="h-5 w-5 text-current"/>
             </div>
-            <div className="py-20 h-full flex flex-col items-center justify-center space-y-4">
+            <div className="py-16 h-full flex flex-col items-center justify-center space-y-4">
                 <Heroes/>
             </div>
         </div>
