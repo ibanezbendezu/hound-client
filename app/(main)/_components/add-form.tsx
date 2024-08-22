@@ -13,14 +13,14 @@ import {
 } from '@/components/ui/form';
 import Select from 'react-select';
 import {customStyles} from './lib/utils';
-import useStore from '@/store/clusters';
+import useStore from '@/store/groups';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {Loader2} from 'lucide-react';
 import {useForm} from 'react-hook-form';
 import * as z from 'zod';
 import {useAuthStore} from '@/store/auth';
 import useCart from '@/store/repos';
-import {clusterUpdateRequestBySha} from '@/api/server-data';
+import {groupUpdateRequestBySha} from '@/api/server-data';
 import {formatDateTime} from '@/lib/utils';
 import { CustomAlert } from './custom-alert';
 
@@ -37,12 +37,12 @@ export default function AddForm({setIsOpen, cartCollapse}: Readonly<AddFormProps
     const router = useRouter();
     const {profile} = useAuthStore(state => state);
     const {cart, emptyCart} = useCart(state => state);
-    const {store, updateClusterInStore} = useStore(state => state);
+    const {store, updateGroupInStore} = useStore(state => state);
 
     const [showAlert, setShowAlert] = useState(false);
     const [alertType, setAlertType] = useState(0);
     const [reposToAdd, setReposToAdd] = useState<any[]>([]);
-    const [clusterSha, setClusterSha] = useState('');
+    const [groupSha, setGroupSha] = useState('');
     const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -55,10 +55,10 @@ export default function AddForm({setIsOpen, cartCollapse}: Readonly<AddFormProps
     const isLoading = form.formState.isSubmitting;
 
     const onValidate = (values: z.infer<typeof formSchema>) => {
-        const cluster = store.find(cluster => cluster.id === values.grupo);
-        setClusterSha(cluster.sha);
+        const group = store.find(group => group.id === values.grupo);
+        setGroupSha(group.sha);
         
-        const prevRepos = cluster.repositories;
+        const prevRepos = group.repositories;
         const newRepos = cart.map(repo => ({
             name: repo.name,
             owner: repo.owner.login,
@@ -104,20 +104,20 @@ export default function AddForm({setIsOpen, cartCollapse}: Readonly<AddFormProps
         
         try {
             const username = profile.username;
-            const data = await clusterUpdateRequestBySha(clusterSha, reposToAdd, username);
-            updateClusterInStore({id: values.grupo, updatedCluster: data.data});
+            const data = await groupUpdateRequestBySha(groupSha, reposToAdd, username);
+            updateGroupInStore({id: values.grupo, updatedGroup: data.data});
             emptyCart();
             setIsOpen(false);
             cartCollapse();
-            router.push(`/clusters/${data.data.sha}`);
+            router.push(`/groups/${data.data.sha}`);
         } catch (error) {
             console.log(error);
         }
     };
 
-    const options = store.map(cluster => ({
-        value: cluster.id,
-        label: formatDateTime(cluster.clusterDate),
+    const options = store.map(group => ({
+        value: group.id,
+        label: formatDateTime(group.groupDate),
     }));
 
     return (

@@ -10,8 +10,8 @@ import {ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent} from "@/
 import {Bar, BarChart, CartesianGrid, XAxis, YAxis,} from "recharts"
 
 import {
-    clusterDataRequestBySha,
-    pairSimilaritiesByClusterShaRequest
+    groupDataRequestBySha,
+    pairSimilaritiesByGroupShaRequest
 } from "@/api/server-data";
 import {Box, CalendarClock, Folder, Eye, FileCode, ArrowRight} from "lucide-react";
 import {PiGraphLight} from "react-icons/pi";
@@ -25,7 +25,7 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-interface Cluster {
+interface Group {
     id: string;
     date: any;
     numberOfRepos: number;
@@ -35,9 +35,9 @@ interface Cluster {
     repositories: any[];
 }
 
-export default function ClusterPage({params}: { params: any }) {
+export default function GroupPage({params}: { params: any }) {
 
-    const [cluster, setCluster] = useState<Cluster | null>(null);
+    const [group, setGroup] = useState<Group | null>(null);
     const [chartData, setChartData] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
@@ -45,11 +45,11 @@ export default function ClusterPage({params}: { params: any }) {
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await clusterDataRequestBySha(params.id);
+            const res = await groupDataRequestBySha(params.id);
             const data = res.data;
-            setCluster(data);
+            setGroup(data);
 
-            const cRes = await pairSimilaritiesByClusterShaRequest(params.id);
+            const cRes = await pairSimilaritiesByGroupShaRequest(params.id);
             const cData = cRes.data;
             setChartData(processSimilarityData(cData));
 
@@ -83,7 +83,7 @@ export default function ClusterPage({params}: { params: any }) {
                 </h2>
                 <Badge variant="secondary">
                     <CalendarClock className="h-4 w-4 shrink-0"></CalendarClock>
-                    {formatDateTime(cluster?.date)}
+                    {formatDateTime(group?.date)}
                 </Badge>
             </div>
 
@@ -104,7 +104,7 @@ export default function ClusterPage({params}: { params: any }) {
                                 N.º de repositorios comparados
                             </div>
                             <Badge variant="secondary">
-                                {cluster?.numberOfRepos}
+                                {group?.numberOfRepos}
                             </Badge>
                         </div>
 
@@ -113,7 +113,7 @@ export default function ClusterPage({params}: { params: any }) {
                                 N.º de folders del grupo
                             </div>
                             <Badge variant="secondary">
-                                {cluster?.numberOfFolders}
+                                {group?.numberOfFolders}
                             </Badge>
                         </div>
 
@@ -122,7 +122,7 @@ export default function ClusterPage({params}: { params: any }) {
                                 N.º de archivos del grupo
                             </div>
                             <Badge variant="secondary">
-                                {cluster?.numberOfFiles}
+                                {group?.numberOfFiles}
                             </Badge>
                         </div>
 
@@ -131,7 +131,7 @@ export default function ClusterPage({params}: { params: any }) {
                                 Cantidad de lineas totales
                             </div>
                             <Badge variant="secondary">
-                                {cluster?.totalLines}
+                                {group?.totalLines}
                             </Badge>
                         </div>
                     </CardContent>
@@ -213,7 +213,7 @@ export default function ClusterPage({params}: { params: any }) {
 
             <div className="flex items-center gap-2 w-full">
                 <Accordion type="multiple" className="w-full border-x-2 border-y-2 rounded">
-                    {cluster?.repositories.map((repository, index) => (
+                    {group?.repositories.map((repository, index) => (
                         <AccordionItem key={index} value={index.toString()}>
                             <AccordionTrigger className="p-2 border-b-2 bg-muted text-primary hover:bg-primary/5">
                                 <div className="flex gap-2">

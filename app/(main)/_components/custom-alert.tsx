@@ -31,7 +31,7 @@ export const CustomAlert = ({ option }: { option: number }) => {
                     <Meh className="h-4 w-4" />
                     <AlertTitle>Aviso</AlertTitle>
                     <AlertDescription>
-                        Solo se añadirán los repositorios que no están dentro del cluster seleccionado.
+                        Solo se añadirán los repositorios que no están dentro del grupo seleccionado.
                     </AlertDescription>
                 </Alert>
             );

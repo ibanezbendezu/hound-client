@@ -1,47 +1,30 @@
 "use client"
 
 import React, {useState, useEffect} from 'react';
-import jquery from 'jquery';
-import cytoscape from 'cytoscape';
+import cytoscape, {Core} from 'cytoscape';
 import CytoscapeComponent from "react-cytoscapejs";
 import dagre from "cytoscape-dagre";
 import fcose from "cytoscape-fcose";
-import cola from 'cytoscape-cola';
-import undoRedo from "cytoscape-undo-redo";
 import expandCollapse from 'cytoscape-expand-collapse';
-import popper from 'cytoscape-popper';
-import navigator from "cytoscape-navigator";
-import {graphStyles} from './style';
+import {fileGraphStyles} from './style';
 import "cytoscape-navigator/cytoscape.js-navigator.css";
 import "./style.css";
 
-import {FileDialog} from '@/app/(main)/(routes)/clusters/[id]/graph/_components/file-dialog';
-import {PairDialog} from '@/app/(main)/(routes)/clusters/[id]/graph/_components/pair-dialog';
+import {PairDialog} from '@/app/(main)/(routes)/groups/[id]/graph/_components/pair-dialog';
 
-import {pairsByClusterShaDataRequest, pairByIdDataRequest} from '@/api/server-data';
-import {fileCytoscape} from './utils';
-import {Legend} from './legends';
+import {pairByIdDataRequest} from '@/api/server-data';
 
-//expandCollapse(cytoscape, jquery);
 cytoscape.use(dagre);
-cytoscape.use(cola);
 cytoscape.use(fcose);
-cytoscape.use(undoRedo);
 cytoscape.use(expandCollapse);
-cytoscape.use(popper);
-cytoscape.use(navigator);
 
-type ClusterProps = {
+type Props = {
     data: any;
-    clusterId: any;
 };
 
-export const Cluster: React.FC<ClusterProps> = ({data, clusterId}) => {
-    const [isFileOpen, setIsFileOpen] = useState(false);
+export const File: React.FC<Props> = ({data}) => {
     const [isPairOpen, setIsPairOpen] = useState(false);
-    const [file, setFile] = useState<any>(null);
     const [pair, setPair] = useState<any>(null);
-    const [graphData, setGraphData] = useState<any>(null);
 
     const handlePair = async (e: any) => {
         const pairId = parseInt(e.id.split("-")[1], 10);
@@ -50,22 +33,6 @@ export const Cluster: React.FC<ClusterProps> = ({data, clusterId}) => {
 
         setPair(pair);
         setIsPairOpen(true);
-    }
-
-    const handleFile = async (e: any) => {
-        const fileSha = e.sha;
-        const res = await pairsByClusterShaDataRequest(clusterId, fileSha);
-        const fileData = res.data.file;
-
-        const cytoscapeFormat = fileCytoscape(res.data)
-        const elements = [
-            ...cytoscapeFormat.nodes.map(node => ({data: node.data})),
-            ...cytoscapeFormat.edges.map(edge => ({data: edge.data}))
-        ];
-
-        setFile(fileData);
-        setGraphData(elements);
-        setIsFileOpen(true);
     }
 
     const config = {
@@ -77,15 +44,14 @@ export const Cluster: React.FC<ClusterProps> = ({data, clusterId}) => {
             nodeSeparation: 70,
             idealEdgeLength: 130,
         },
-        zoom: 0.5,
+        zoom: 0.7,
     };
 
     const [cy, setCy] = useState<any>(null);
 
     useEffect(() => {
         if (cy) {
-            cy.zoom(config.zoom);
-            cy.expandCollapse({
+            const api = cy.expandCollapse({
                 layoutBy: {
                     name: "preset",
                     randomize: true,
@@ -101,26 +67,11 @@ export const Cluster: React.FC<ClusterProps> = ({data, clusterId}) => {
                 container: false, viewLiveFramerate: 0, thumbnailEventFramerate: 30, thumbnailLiveFramerate: false,
                 dblClickDelay: 200, removeCustomContainer: false, rerenderDelay: 100
             };
-            // @ts-ignore
-            const nav = cy.navigator(defaults);
-
-            return () => {
-                if (nav) {
-                    nav.destroy();
-                }
-            };
         }
     }, [cy]);
 
     return (
         <>
-            <FileDialog
-                isOpen={isFileOpen}
-                setIsOpen={setIsFileOpen}
-                file={file}
-                graphData={graphData}
-            >
-            </FileDialog>
             <PairDialog
                 isOpen={isPairOpen}
                 setIsOpen={setIsPairOpen}
@@ -133,20 +84,16 @@ export const Cluster: React.FC<ClusterProps> = ({data, clusterId}) => {
                     cy.on("click", "edge", (e: any) => {
                         handlePair(e.target.data()).then(r => console.log(r));
                     });
-                    cy.on("click", "node[type='file']", (e: any) => {
-                        handleFile(e.target.data()).then(r => console.log(r));
-                    });
                 }}
                 layout={config.layout}
                 styleEnabled={true}
-                stylesheet={graphStyles}
+                stylesheet={fileGraphStyles}
                 elements={data}
                 wheelSensitivity={0.1}
                 zoomingEnabled={true}
                 zoom={config.zoom}
-                style={{height: "100vh" as React.CSSProperties['height'], width: "100%"}}
+                style={{width: "100%", height: "100%"}}
             />
-            <Legend/>
         </>
     );
 };

@@ -15,38 +15,52 @@ import {CodeViewer} from '../../../../../../../components/code-viewer';
 import {Spinner} from '../../../../../../../components/spinner';
 import {GitCompareArrows} from 'lucide-react';
 
-export function PairDialog({
-                               children,
-                               isOpen,
-                               setIsOpen,
-                               pair,
-                           }: {
+interface PairDialogProps {
     children?: React.ReactNode;
     isOpen: boolean;
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
     pair?: any;
-}) {
+}
 
+export function PairDialog({isOpen, setIsOpen, pair}: PairDialogProps) {
     const [file1Content, setFile1Content] = useState<any>(null);
     const [file2Content, setFile2Content] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(false);
-
+    
     useEffect(() => {
+        let isMounted = true;
+    
         const fetchData = async () => {
-            //setLoading(true);
-            if (pair && pair.file1 && pair.file2) {
-                const file1Content = await fileContentRequest(pair.file1.id);
-                const f1c = file1Content.data;
-                const file2Content = await fileContentRequest(pair.file2.id);
-                const f2c = file2Content.data;
-
-                setFile1Content(f1c);
-                setFile2Content(f2c);
+            setFile1Content(null);
+            setFile2Content(null);
+            setLoading(true);
+            try {
+                if (pair && pair.file1 && pair.file2) {
+                    const file1Content = await fileContentRequest(pair.file1.id);
+                    const f1c = file1Content.data;
+                    const file2Content = await fileContentRequest(pair.file2.id);
+                    const f2c = file2Content.data;
+    
+                    if (isMounted) {
+                        setFile1Content(f1c);
+                        setFile2Content(f2c);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching file content:', error);
+            } finally {
+                if (isMounted) {
+                    setLoading(false);
+                }
             }
-            //setLoading(false);
         };
+    
         fetchData();
-    }, [pair]);
+    
+        return () => {
+            isMounted = false;
+        };
+    }, [pair, fileContentRequest]);
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>

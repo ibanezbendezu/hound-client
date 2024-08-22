@@ -1,6 +1,6 @@
 import {scaleLinear} from 'd3-scale';
 
-export function clusterCytoscape(data: any) {
+export function groupCytoscape(data: any) {
     interface NodeData {
         id: string;
         label: string;

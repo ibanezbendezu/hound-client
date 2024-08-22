@@ -3,7 +3,7 @@ import {persist} from "zustand/middleware";
 
 type StoreItem = {
     id: number;
-    clusterDate: string;
+    groupDate: string;
     comparisons: Array<any>;
     numberOfRepos: number;
     repositories: Array<any>;
@@ -11,43 +11,43 @@ type StoreItem = {
 
 type State = {
     store: Array<any>,
-    cluster: any,
+    group: any,
 }
 
 type Actions = {
-    setCluster: (params: { newCluster: any }) => void,
-    addClusterToStore: (params: { newCluster: any }) => void,
-    removeClusterFromStore: (params: { itemIndex: number }) => void,
+    setGroup: (params: { newGroup: any }) => void,
+    addGroupToStore: (params: { newGroup: any }) => void,
+    removeGroupFromStore: (params: { itemIndex: number }) => void,
     emptyStore: () => void,
-    updateClusterInStore: (params: { id: number, updatedCluster: any }) => void
+    updateGroupInStore: (params: { id: number, updatedGroup: any }) => void
 }
 
 const useStore = create(persist<State & Actions>(
     (set) => ({
         store: [],
-        cluster: {},
+        group: {},
         openModal: false,
-        setCluster: (params) => {
-            const {newCluster} = params
+        setGroup: (params) => {
+            const {newGroup} = params
             set((state) => {
                 return {
                     ...state,
-                    cluster: newCluster
+                    group: newGroup
                 }
             })
 
         },
-        addClusterToStore: (params) => {
-            const {newCluster} = params
+        addGroupToStore: (params) => {
+            const {newGroup} = params
             set((state) => {
-                const newStore = [...state.store, newCluster]
+                const newStore = [...state.store, newGroup]
                 return {
                     ...state,
                     store: newStore
                 }
             })
         },
-        removeClusterFromStore: (params) => {
+        removeGroupFromStore: (params) => {
             const {itemIndex} = params
             set((state) => {
                 const newStore = state.store.filter((element, elementIndex) => {
@@ -68,8 +68,8 @@ const useStore = create(persist<State & Actions>(
                 }
             })
         },
-        updateClusterInStore: ({id, updatedCluster}) => set((state) => ({
-            store: state.store.map((item) => item.id === id ? {...item, ...updatedCluster} : item)
+        updateGroupInStore: ({id, updatedGroup}) => set((state) => ({
+            store: state.store.map((item) => item.id === id ? {...item, ...updatedGroup} : item)
         })),
     }), {
         name: 'store'

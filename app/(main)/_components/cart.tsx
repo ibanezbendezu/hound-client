@@ -14,10 +14,10 @@ import {useMediaQuery} from "usehooks-ts";
 
 import {Button} from "@/components/ui/button";
 import {ConfirmModal} from "@/components/modals/confirm-modal";
-import {clusterCreateRequest} from "@/api/server-data";
+import {groupCreateRequest} from "@/api/server-data";
 import {useLoading} from "@/hooks/use-loading";
 import {useAuthStore} from "@/store/auth";
-import useStore from "@/store/clusters";
+import useStore from "@/store/groups";
 import useCart from '@/store/repos';
 import {AddDialog} from "./add-dialog"
 import AddForm from "./add-form";
@@ -27,7 +27,7 @@ export const Cart = () => {
     //CORREGIR LOS NOMBRES DE LAS FUNCIONES
     const user = useAuthStore((state) => state.profile);
     const cartItems = useCart(state => state.cart);
-    const {store, addClusterToStore} = useStore(state => state);
+    const {store, addGroupToStore} = useStore(state => state);
     const emptyCart = useCart(state => state.emptyCart);
 
     const router = useRouter();
@@ -55,15 +55,15 @@ export const Cart = () => {
 
         const username = user.username;
 
-        const data = await clusterCreateRequest(repos, username);
+        const data = await groupCreateRequest(repos, username);
 
-        addClusterToStore({newCluster: data.data});
+        addGroupToStore({newGroup: data.data});
         emptyCart();
 
         loading.onClose();
         collapse();
 
-        router.push(`/clusters/${data.data.sha}`);
+        router.push(`/groups/${data.data.sha}`);
     }
 
     const resetWidth = () => {

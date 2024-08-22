@@ -6,7 +6,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import {File} from '@/app/(main)/(routes)/clusters/[id]/graph/_components/file';
+import {File} from '@/app/(main)/(routes)/groups/[id]/graph/_components/file';
 import {Badge} from '../../../../../../../components/ui/badge';
 
 interface FileDialogProps {

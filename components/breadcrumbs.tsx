@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import {usePathname} from "next/navigation";
-import useStore from "@/store/clusters";
+import useStore from "@/store/groups";
 
 const Breadcrumbs = () => {
-    const clusters = useStore((state) => state.store);
+    const groups = useStore((state) => state.store);
     const pathname = usePathname();
     const pathParts = pathname.split("/").filter(Boolean);
 

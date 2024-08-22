@@ -16,7 +16,7 @@ import {Item} from "./item";
 import {useSearch} from "@/hooks/use-search";
 import {useSettings} from "@/hooks/use-settings";
 import {Navbar} from "./navbar";
-import {ClusterList} from "./cluster-list";
+import {GroupList} from "./group-list";
 
 export const Navigation = () => {
     const router = useRouter();
@@ -126,7 +126,7 @@ export const Navigation = () => {
                     <Item label="Configuración" icon={Settings} onClick={settings.onOpen}/>
                 </div>
                 <div className="mt-4">
-                    <ClusterList/>
+                    <GroupList/>
                 </div>
 
                 <div

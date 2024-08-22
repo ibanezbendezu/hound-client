@@ -12,7 +12,7 @@ export async function middleware(req: NextRequest) {
 
     if ( (req.nextUrl.pathname.startsWith("/home") ||
             req.nextUrl.pathname.startsWith("/welcome") ||
-            req.nextUrl.pathname.startsWith("/clusters") ||
+            req.nextUrl.pathname.startsWith("/groups") ||
             req.nextUrl.pathname.startsWith("/users/")) && !session ) {
         console.log("No estas logueado");
         return NextResponse.redirect(new URL("/login", req.url));

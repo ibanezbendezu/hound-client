@@ -33,55 +33,55 @@ export const ownerDataRequest = async (owner: string) => {
     }
 }
 
-export const clusterDataRequestBySha = async (sha: string) => {
+export const groupDataRequestBySha = async (sha: string) => {
     try {
-        const res = await axios.get(`/clusters/sha/${sha}`);
+        const res = await axios.get(`/groups/sha/${sha}`);
         return {data: res.data};
     } catch (error) {
-        console.error("Error fetching cluster data:", error);
+        console.error("Error fetching group data:", error);
         throw error;
     }
 }
 
-export const clusterCreateRequest = async (repos: any[], username: any) => {
+export const groupCreateRequest = async (repos: any[], username: any) => {
     try {
         const requestBody = {repos, username};
-        const res = await axios.post(`/clusters`, requestBody);
+        const res = await axios.post(`/groups`, requestBody);
         return {data: res.data};
     } catch (error) {
-        console.error("Error fetching cluster create data:", error);
+        console.error("Error fetching group create data:", error);
         throw error;
     }
 }
 
-export const clusterUpdateRequest = async (id: number, repos: any[], username: any) => {
+export const groupUpdateRequest = async (id: number, repos: any[], username: any) => {
     try {
         const requestBody = {repos, username};
-        const res = await axios.put(`/clusters/${id}`, requestBody);
+        const res = await axios.put(`/groups/${id}`, requestBody);
         return {data: res.data};
     } catch (error) {
-        console.error("Error fetching cluster update data:", error);
+        console.error("Error fetching group update data:", error);
         throw error;
     }
 }
 
-export const clusterUpdateRequestBySha = async (sha: string, repos: any[], username: any) => {
+export const groupUpdateRequestBySha = async (sha: string, repos: any[], username: any) => {
     try {
         const requestBody = {repos, username};
-        const res = await axios.put(`/clusters/sha/${sha}`, requestBody);
+        const res = await axios.put(`/groups/sha/${sha}`, requestBody);
         return {data: res.data};
     } catch (error) {
-        console.error("Error fetching cluster update data:", error);
+        console.error("Error fetching group update data:", error);
         throw error;
     }
 }
 
-export const clusterDeleteRequestBySha = async (sha: string) => {
+export const groupDeleteRequestBySha = async (sha: string) => {
     try {
-        const res = await axios.delete(`/clusters/sha/${sha}`);
+        const res = await axios.delete(`/groups/sha/${sha}`);
         return {data: res.data};
     } catch (error) {
-        console.error("Error fetching cluster delete data:", error);
+        console.error("Error fetching group delete data:", error);
         throw error;
     }
 }
@@ -110,9 +110,9 @@ export const fileContentRequestBySha = async (sha: string) => {
 
 
 //PAIRS
-export const pairSimilaritiesByClusterShaRequest = async (sha: string) => {
+export const pairSimilaritiesByGroupShaRequest = async (sha: string) => {
     try {
-        const res = await axios.get(`/clusters/sha/${sha}/similarities`);
+        const res = await axios.get(`/groups/sha/${sha}/similarities`);
         return {data: res.data};
     } catch (error) {
         console.error("Error fetching pair similarities data:", error);
@@ -131,7 +131,7 @@ export const pairByIdDataRequest = async (id: number) => {
 }
 
 
-export const pairsByClusterShaDataRequest = async (sha: string, fileSha: string) => {
+export const pairsByGroupShaDataRequest = async (sha: string, fileSha: string) => {
     try {
         const res = await axios.get(`/pairs/sha/${sha}/${fileSha}`);
         return {data: res.data};

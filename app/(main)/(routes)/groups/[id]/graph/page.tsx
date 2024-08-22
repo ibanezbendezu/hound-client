@@ -2,9 +2,9 @@
 
 import {Spinner} from "@/components/spinner";
 import {useEffect, useState} from "react";
-import {Cluster} from "./_components/cluster";
-import {clusterDataRequestBySha} from "@/api/server-data";
-import {clusterCytoscape} from "./_components/utils";
+import {Group} from "./_components/group";
+import {groupDataRequestBySha} from "@/api/server-data";
+import {groupCytoscape} from "./_components/utils";
 
 export default function GraphPage({params}: { params: any }) {
 
@@ -13,9 +13,9 @@ export default function GraphPage({params}: { params: any }) {
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await clusterDataRequestBySha(params.id);
+            const res = await groupDataRequestBySha(params.id);
 
-            const cytoscapeFormat = clusterCytoscape(res.data)
+            const cytoscapeFormat = groupCytoscape(res.data)
             const elements = [
                 ...cytoscapeFormat.nodes.map(node => ({data: node.data})),
                 ...cytoscapeFormat.edges.map(edge => ({data: edge.data}))
@@ -37,7 +37,7 @@ export default function GraphPage({params}: { params: any }) {
 
     return (
         <div className="min-h-full flex flex-col dark:bg-[#1F1F1F]">
-            {data && <Cluster data={data} clusterId={params.id}/>}
+            {data && <Group data={data} groupId={params.id}/>}
         </div>
     );
 };
