@@ -8,6 +8,7 @@ import {Button} from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { logout } from "@/api/auth-server";
+import useStore from "@/store/groups";
 
 
 export const Navbar = () => {
@@ -16,6 +17,7 @@ export const Navbar = () => {
 
     const handleLogout = async () => {
         logout();
+        useStore.getState().emptyStore();
         router.push("/login");
     };
 

@@ -13,13 +13,15 @@ import {ChevronsLeftRight,LogOut} from "lucide-react";
 import {useAuthStore} from "@/store/auth";
 import { logout } from "@/api/auth-server";
 import { useRouter } from "next/navigation";
+import useStore from "@/store/groups";
 
 export const UserItem = () => {
     const router = useRouter();
     const user = useAuthStore((state) => state.profile);
 
     const handleLogout = async () => {
-        logout();
+        await logout();
+        useStore.getState().emptyStore();
         router.push("/login");
     };
 
@@ -69,8 +71,8 @@ export const UserItem = () => {
                     </div>
                 </div>
                 <DropdownMenuSeparator/>
-                <DropdownMenuItem>
-                    <div className="flex items-center" onClick={handleLogout}>
+                <DropdownMenuItem onClick={handleLogout}>
+                    <div className="flex items-center">
                         <LogOut className="text-xs"/>
                         <DropdownMenuLabel className="text-xs">Logout</DropdownMenuLabel>
                     </div>
