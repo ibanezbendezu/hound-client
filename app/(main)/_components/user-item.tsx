@@ -11,12 +11,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {ChevronsLeftRight,LogOut} from "lucide-react";
 import {useAuthStore} from "@/store/auth";
+import { logout } from "@/api/auth-server";
+import { useRouter } from "next/navigation";
 
 export const UserItem = () => {
+    const router = useRouter();
     const user = useAuthStore((state) => state.profile);
 
     const handleLogout = async () => {
-
+        logout();
+        router.push("/login");
     };
 
 

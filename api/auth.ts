@@ -1,7 +1,7 @@
 import axios from "../lib/axios"
 import {jwtVerify} from "jose";
 import {cookies} from "next/headers";
-import {setCookie, deleteCookie} from "cookies-next";
+import {setCookie, deleteCookie, getCookie} from "cookies-next";
 
 const secretKey = process.env.JWT_SECRET;
 const key = new TextEncoder().encode(secretKey);
@@ -54,33 +54,28 @@ export async function getSession(): Promise<any> {
     }
 }
 
-export async function refresh() {
-    const token = getAccessToken();
-    setCookie("jwt", token, {
-        maxAge: 3600,
-    });
-    return token;
-}
+export async function refreshSession() {
+    const accessToken = cookies().get("jwt")?.value;
 
-export async function logout() {
-    deleteCookie("jwt");
-}
-
-export async function profile() {
-    return await axios.get("/profile");
-}
-
-async function getAccessToken() {
-    try {
-        const response = await fetch("/auth/github/refresh");
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+    const refreshResponse = await fetch(`${process.env.SERVER_URL}/auth/github/refresh`, {
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${accessToken}`
         }
-        const data = await response.json();
-        const accessToken = data.access_token;
-        console.log(accessToken);
-        return accessToken;
-    } catch (error) {
-        console.error('Error fetching access token:', error);
+    });
+
+    console.log("REFRESH RESPONSE:", refreshResponse.status);
+
+    if (refreshResponse.ok) {
+        console.log("OLD TOKEN:", accessToken);
+        console.log("REFRESH RESPONSE:", refreshResponse);
+        const {accessToken: newAccessToken} = await refreshResponse.json();
+        setCookie("jwt", newAccessToken, {
+            maxAge: 60 * 60 * 24 * 7
+        });
+        return newAccessToken;
+    } else {
+        deleteCookie("jwt");
+        return null;
     }
 }

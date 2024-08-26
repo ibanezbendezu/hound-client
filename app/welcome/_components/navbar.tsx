@@ -6,10 +6,18 @@ import {Logo} from "./logo";
 import {ModeToggle} from "@/components/mode-toggle";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { logout } from "@/api/auth-server";
 
 
 export const Navbar = () => {
     const scrolled = useScrollTop();
+    const router = useRouter();
+
+    const handleLogout = async () => {
+        logout();
+        router.push("/login");
+    };
 
     return (
         <div
@@ -20,10 +28,8 @@ export const Navbar = () => {
         >
             <Logo/>
             <div className="md:ml-auto md:justify-end justify-between w-full flex items-center gap-x-2">
-                <Button variant="normal" size="sm" asChild>
-                    <Link href="/">
-                        Log out
-                    </Link>
+                <Button variant="normal" size="sm" onClick={handleLogout}>
+                    Log out
                 </Button>
                 <ModeToggle/>
             </div>

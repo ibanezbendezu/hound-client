@@ -68,9 +68,8 @@ export const SearchCommand = () => {
                     }>(
                         `https://api.github.com/search/users?q=${debouncedSearchTerm}`,
                         {
-                            // Añadir encabezados al request
                             headers: {
-                                Authorization: `Bearer ${authToken}` // Usar el token de autorización
+                                Authorization: `Bearer ${authToken}`
                             }
                         }
                     );

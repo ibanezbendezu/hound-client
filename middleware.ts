@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getSession } from './api/auth';
+import { getSession, refreshSession } from './api/auth';
 
 export async function middleware(req: NextRequest) {
     const session = await getSession();
 
     if ( (req.nextUrl.pathname.startsWith("/login") || req.nextUrl.pathname === "/") && session ) {
         console.log("Ya estás logueado");
+        //refreshSession();
         return NextResponse.redirect(new URL("/home", req.url));
     }
 
@@ -18,5 +19,6 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL("/login", req.url));
     }
 
+    //refreshSession();
     return NextResponse.next();
 }
