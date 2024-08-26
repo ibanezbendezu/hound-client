@@ -237,6 +237,11 @@ export default function GroupPage({params}: { params: any }) {
                                                 <div className="flex gap-2">
                                                     <Folder className="ml-2 h-5 w-5 shrink-0 opacity-50"></Folder>
                                                     <p className="text-sm font-semibold text-muted-foreground">{folder.name}</p>
+                                                    <Badge variant="secondary">
+                                                        <span className="text-xs">
+                                                            {folder.folderType.charAt(0)}
+                                                        </span>
+                                                    </Badge>
                                                 </div>
                                                 <div className="flex gap-2">
                                                     <Badge variant="secondary">

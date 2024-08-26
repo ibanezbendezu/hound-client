@@ -14,7 +14,6 @@ export const LoadingModal = () => {
                 <DialogHeader className="b pb-3">
                     <div className="flex items-center justify-center">
                         <h2 className="text-lg font-medium">Comparando repositorios...</h2>
-                        <img src="/logo-dark.svg" alt="Hound" className="w-8 h-8 hidden dark:block ml-2"/>
                         <Image
                             src="/u1f436-g-bw.svg"
                             height={40}

@@ -33,7 +33,8 @@ export const Item = ({
             style={{paddingLeft: "12px"}}
             className={cn(
                 "group min-h-[27px] text-sm py-1 pr-3 w-full hover:bg-primary/5 flex items-center text-muted-foreground font-medium",
-                active && "bg-primary/5 text-primary"
+                active && "bg-primary/5 text-primary",
+                isGroup && "text-xs",
             )}
         >
             <Icon className="shrink-0 h-[18px] w-[18px] mr-2 text-muted-foreground"/>
@@ -47,7 +48,7 @@ export const Item = ({
             )}
             {isGroup && (
                 <kbd
-                    className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+                    className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 whitespace-nowrap">
                     <span className="text-xs">Repos: {isGroup} </span>
                 </kbd>
             )}
