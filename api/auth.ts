@@ -35,6 +35,7 @@ export async function isSessionExpired(session: any): Promise<boolean> {
  */
 export async function getSession(): Promise<any> {
     const token = cookies().get("jwt")?.value;
+    console.log("TOKEN:", token);
     if (!token) return null;
     try {
         const session = await decrypt(token);
