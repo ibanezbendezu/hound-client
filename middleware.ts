@@ -3,11 +3,15 @@ import type { NextRequest } from 'next/server';
 import { getSession, refreshSession } from './api/auth';
 
 export async function middleware(req: NextRequest) {
-    if(req.nextUrl.pathname.startsWith("/welcome")) {
+    if(req.nextUrl.pathname.startsWith("/welcome") && req.nextUrl.searchParams.has("tk") ){
         const tk: string = req.nextUrl.searchParams.get("tk") || ""
-        const json = JSON.parse(btoa(tk))
-        localStorage.setItem("jwt", json.jwt)
-        localStorage.setItem("user", json.user)
+        const json = JSON.parse(atob(tk))
+
+        const response = NextResponse.redirect(new URL("/welcome", req.url));
+        response.cookies.set('jwt', json.jwt);
+        response.cookies.set('user', JSON.stringify(json.user));
+
+        return response;
     }
 
     const session = await getSession();
