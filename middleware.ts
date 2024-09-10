@@ -7,7 +7,7 @@ export async function middleware(req: NextRequest) {
         const tk: string = req.nextUrl.searchParams.get("tk") || ""
         const json = JSON.parse(atob(tk))
 
-        const response = NextResponse.redirect(new URL("/welcome", req.url));
+        const response = NextResponse.redirect(new URL("/home", req.url));
         response.cookies.set('jwt', json.jwt);
         response.cookies.set('user', JSON.stringify(json.user));
 
