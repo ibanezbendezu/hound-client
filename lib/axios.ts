@@ -2,7 +2,7 @@ import axios, {AxiosRequestHeaders} from "axios";
 import {getCookie} from "cookies-next";
 
 const authApi = axios.create({
-    baseURL: "http://localhost:5000/",
+    baseURL: "https://hound-back.onrender.com/",
     withCredentials: true
 });
 
