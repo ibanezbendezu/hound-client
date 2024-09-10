@@ -12,7 +12,7 @@ export default function WelcomePage() {
     const {setProfile} = useAuthStore();
 
     useEffect(() => {
-        const profile = cookie.parse(document.cookie).user
+        const profile = localStorage.getItem("user")
 
         if (profile) {
             setProfile(JSON.parse(profile))

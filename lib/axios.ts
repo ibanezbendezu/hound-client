@@ -7,7 +7,7 @@ const authApi = axios.create({
 });
 
 authApi.interceptors.request.use((config) => {
-    const token = getCookie("jwt");
+    const token = localStorage.getItem("jwt");
     console.log("Fetch token", token);
     config.headers = {
         Authorization: `Bearer ${token}`
