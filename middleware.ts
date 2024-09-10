@@ -6,10 +6,12 @@ import { cookies } from 'next/headers';
 export async function middleware(req: NextRequest) {
     if(req.nextUrl.pathname.startsWith("/welcome") && req.nextUrl.searchParams.has("tk") ){
         const tk: string = req.nextUrl.searchParams.get("tk") || ""
-        const json = JSON.parse(atob(tk))
 
-        cookies().set('jwt', json.jwt);
-        cookies().set('user', json.user);
+        const key = decodeURIComponent(tk);
+        const [user, jwt] = key.split('@@');
+
+        cookies().set('jwt', jwt);
+        cookies().set('user', JSON.stringify(user));
     }
 
     const session = await getSession();
