@@ -1,5 +1,5 @@
 {
-  "name": "nextjs-dashboard-tailwind-layout",
+  "name": "hound-client",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -76,6 +76,7 @@
     "reactflow": "^11.11.3",
     "recharts": "^2.12.7",
     "semantic-ui-react": "^2.1.5",
+    "sharp": "^0.33.5",
     "simple-icons": "^11.14.0",
     "sonner": "^1.4.41",
     "styled-components": "^6.1.11",

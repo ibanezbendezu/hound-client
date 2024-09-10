@@ -90,7 +90,7 @@ export const groupDeleteRequestBySha = async (sha: string) => {
 //FILES
 export const fileContentRequest = async (id: number) => {
     try {
-        const res = await axios.get(`/files/content/${id}`);
+        const res = await axios.get(`/github/file/${id}/content`);
         return {data: res.data};
     } catch (error) {
         console.error("Error fetching file content data:", error);
@@ -100,7 +100,7 @@ export const fileContentRequest = async (id: number) => {
 
 export const fileContentRequestBySha = async (sha: string) => {
     try {
-        const res = await axios.get(`/github/file/${sha}/content`);
+        const res = await axios.get(`/github/file/sha/${sha}/content`);
         return {data: res.data};
     } catch (error) {
         console.error("Error fetching file content data:", error);

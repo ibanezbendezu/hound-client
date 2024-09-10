@@ -19,8 +19,8 @@ export default function HoundCarousel() {
     const [count, setCount] = React.useState(0)
 
     const messages: { [key: number]: string } = {
-        1: "Visualiza las similitudes entre los archivos de los proyectos",
-        2: "Examina lado a lado las diferencias entre los archivos comparados",
+        1: "Visualiza los porcentajes de similitud entre los archivos de los proyectos",
+        2: "Examina lado a lado las similitudes entre los archivos comparados",
     };
     
     const message = messages[current] || "default message";

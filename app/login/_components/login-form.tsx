@@ -5,8 +5,9 @@ import Image from 'next/image';
 
 export const LoginForm = () => {
 
+    const githubAuthUrl = process.env.NEXT_PUBLIC_GH_OAUTH_URL as string || "https://hound-server.azurewebsites.net/auth/github";
     const handleGithubLogin = () => {
-        window.location.href = 'http://localhost:5000/auth/github';
+        window.location.href = githubAuthUrl;
     };
 
     return (
