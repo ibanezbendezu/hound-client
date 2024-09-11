@@ -39,7 +39,8 @@ export default function UserPage({params}: { params: any }) {
 
     if (loading) {
         return (
-            <div className="h-full flex items-center justify-center">
+            <div className="h-full flex items-center justify-center flex-col gap-10">
+                <div className="text-xl font-semibold text-center">Filtrando repositorios. Espera un momento</div>
                 <Spinner size="lg"/>
             </div>
         );
