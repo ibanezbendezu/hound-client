@@ -1,8 +1,8 @@
 import axios, {AxiosRequestHeaders} from "axios";
 import {getCookie} from "cookies-next";
 
-const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL as string
-console.log("Server url", serverUrl);
+const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "https://hound-server.azurewebsites.net";
+console.log("Server URL", serverUrl);
 
 const authApi = axios.create({
     baseURL: serverUrl,
