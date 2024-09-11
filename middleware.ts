@@ -1,21 +1,23 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getSession, refreshSession } from './api/auth';
-import { cookies } from 'next/headers';
 
 export async function middleware(req: NextRequest) {
-    if(req.nextUrl.pathname.startsWith("/welcome") && req.nextUrl.searchParams.has("tk") ){
+    if(req.nextUrl.pathname.startsWith("/auth")){
         const tk: string = req.nextUrl.searchParams.get("tk") || ""
 
         const key = decodeURIComponent(tk);
         const [user, jwt] = key.split('@@');
 
-        cookies().set('jwt', jwt);
-        cookies().set('user', JSON.stringify(user));
+        const response = NextResponse.redirect(new URL('/welcome', req.url));
+
+        response.cookies.set('jwt', jwt);
+        response.cookies.set('user', user);
+
+        return response;
     }
 
     const session = await getSession();
-    console.log("Session:", session);
 
     if ( (req.nextUrl.pathname.startsWith("/home") ||
             req.nextUrl.pathname.startsWith("/welcome") ||
@@ -33,7 +35,5 @@ export async function middleware(req: NextRequest) {
     }
 
     //refreshSession();
-    response.cookies.set('jwt', cookies().get("jwt")?.value || "");
-    response.cookies.set('user', cookies().get("user")?.value || "");
     return response;
 }
