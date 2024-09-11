@@ -1,16 +1,16 @@
 import axios, {AxiosRequestHeaders} from "axios";
 import {getCookie} from "cookies-next";
 
-const githubAuthUrl = process.env.SERVER_URL as string || "http://localhost:5000/";
+const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL as string
+console.log("Server url", serverUrl);
 
 const authApi = axios.create({
-    baseURL: githubAuthUrl,
+    baseURL: serverUrl,
     withCredentials: true
 });
 
 authApi.interceptors.request.use((config) => {
     const token = getCookie("jwt");
-    console.log("Fetch token", token);
     config.headers = {
         Authorization: `Bearer ${token}`
     } as AxiosRequestHeaders;

@@ -13,7 +13,6 @@ export default function WelcomePage() {
 
     useEffect(() => {
         const profile = cookie.parse(document.cookie).user;
-        console.log("PROFILE:", profile);
 
         if (profile) {
             setProfile(JSON.parse(profile))
