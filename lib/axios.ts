@@ -1,13 +1,15 @@
 import axios, {AxiosRequestHeaders} from "axios";
 import {getCookie} from "cookies-next";
 
+const githubAuthUrl = process.env.SERVER_URL as string || "http://localhost:5000/";
+
 const authApi = axios.create({
-    baseURL: "https://hound-back.onrender.com/",
+    baseURL: githubAuthUrl,
     withCredentials: true
 });
 
 authApi.interceptors.request.use((config) => {
-    const token = localStorage.getItem("jwt");
+    const token = getCookie("jwt");
     console.log("Fetch token", token);
     config.headers = {
         Authorization: `Bearer ${token}`
