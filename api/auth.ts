@@ -1,4 +1,3 @@
-import axios from "../lib/axios"
 import {jwtVerify} from "jose";
 import {cookies} from "next/headers";
 import {setCookie, deleteCookie, getCookie} from "cookies-next";
