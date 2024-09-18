@@ -14,7 +14,7 @@ import {useMediaQuery} from "usehooks-ts";
 
 import {Button} from "@/components/ui/button";
 import {ConfirmModal} from "@/components/modals/confirm-modal";
-import {groupCreateRequest} from "@/api/server-data";
+import {groupSummaryRequest, groupCreateRequest} from "@/api/server-data";
 import {useLoading} from "@/hooks/use-loading";
 import {useAuthStore} from "@/store/auth";
 import useStore from "@/store/groups";
@@ -22,6 +22,8 @@ import useCart from '@/store/repos';
 import {AddDialog} from "./add-dialog"
 import AddForm from "./add-form";
 import {TooltipHint} from "@/components/tooltip-hint";
+import { number } from "zod";
+import { LoadingModal } from "@/components/modals/loading-modal";
 
 export const Cart = () => {
     //CORREGIR LOS NOMBRES DE LAS FUNCIONES
@@ -40,30 +42,71 @@ export const Cart = () => {
     const loading = useLoading();
     const [isAddOpen, setIsAddOpen] = useState(false);
 
+    const [isOpen, setIsOpen] = useState(false);
+    const [percentage, setPercentage] = useState(0);
+
     useEffect(() => {
         collapse();
     }, []);
 
+    const recursiveFactorial = (n: number): number => {
+        if (n === 0) {
+            return 1;
+        }
+        return n * recursiveFactorial(n - 1);
+    }
+
+    const combinations = (n: number) => {
+        // n over k combinations
+        const k = 2;
+        const nMinusK = n - k;
+        const nFactorial = recursiveFactorial(n);
+        const kFactorial = recursiveFactorial(k);
+        const nMinusKFactorial = recursiveFactorial(nMinusK);
+        const nChooseK = nFactorial / (kFactorial * nMinusKFactorial);
+
+        // 6 seconds per request
+        return nChooseK;
+    }
+
 
     const handleRepos = async () => {
-        loading.onOpen();
-
+        
         const repos = cartItems.map(repo => ({
             owner: repo.owner.login,
             name: repo.name
         }));
+        const combs = combinations(repos.length);
+        
+        setPercentage(0);
+        setIsOpen(true);
 
         const username = user.username;
 
-        const data = await groupCreateRequest(repos, username);
+        const group = await groupCreateRequest(repos, username);
+        const pId = setInterval(() => {
+            if(percentage >= 99)
+                clearInterval(pId);
+            setPercentage(prev => prev + 1);
+        }, 6 * combs * 10);
 
-        addGroupToStore({newGroup: data.data});
-        emptyCart();
+        const iId = setInterval(async () => {
+            const summary = await groupSummaryRequest(group.data.sha);
+            if (summary.data.comparissonsCompleted === combs) {
+                clearInterval(pId);
+                clearInterval(iId);
 
-        loading.onClose();
-        collapse();
+                addGroupToStore(summary.data);
+                emptyCart();
 
-        router.push(`/groups/${data.data.sha}`);
+                setIsOpen(false);
+                setPercentage(100);
+                collapse();
+                
+                router.push(`/groups/${group.data.sha}`);
+            }
+        }, 6000);
+
     }
 
     const resetWidth = () => {
@@ -88,6 +131,8 @@ export const Cart = () => {
 
     return (
         <>
+            <LoadingModal isOpen={isOpen} percentage={percentage} />
+
             <AddDialog
                 isOpen={isAddOpen}
                 setIsOpen={setIsAddOpen}

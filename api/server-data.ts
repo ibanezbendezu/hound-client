@@ -54,6 +54,16 @@ export const groupCreateRequest = async (repos: any[], username: any) => {
     }
 }
 
+export const groupSummaryRequest = async (sha: string) => {
+    try {
+        const res = await axios.get(`/groups/summary/${sha}`);
+        return {data: res.data};
+    } catch (error) {
+        console.error("Error fetching group summary data:", error);
+        throw error;
+    }
+}
+
 export const groupUpdateRequest = async (id: number, repos: any[], username: any) => {
     try {
         const requestBody = {repos, username};

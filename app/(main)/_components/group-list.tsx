@@ -29,7 +29,7 @@ export const GroupList = () => {
                     <Item
                         onClick={() => onRedirect(group.sha)}
                         isGroup={group.numberOfRepos}
-                        label={formatDateTime(group.groupDate)}
+                        label={formatDateTime(group.date)}
                         icon={Boxes}
                         active={params.id == group.sha}
                     />

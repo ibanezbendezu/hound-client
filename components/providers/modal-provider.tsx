@@ -18,7 +18,6 @@ export const ModalProvider = () => {
     return (
         <>
             <SettingsModal/>
-            <LoadingModal/>
         </>
     );
 };

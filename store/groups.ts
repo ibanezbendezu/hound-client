@@ -38,9 +38,8 @@ const useStore = create(persist<State & Actions>(
 
         },
         addGroupToStore: (params) => {
-            const {newGroup} = params
             set((state) => {
-                const newStore = [...state.store, newGroup]
+                const newStore = [...state.store, params]
                 return {
                     ...state,
                     store: newStore

@@ -4,12 +4,13 @@ import {Dialog, DialogContent, DialogHeader} from "@/components/loading-dialog";
 import {useLoading} from "@/hooks/use-loading";
 import {Spinner} from "../spinner";
 import Image from "next/image";
+import { Progress } from "../ui/progress";
+import { useEffect, useState } from "react";
 
-export const LoadingModal = () => {
-    const loading = useLoading();
+export const LoadingModal = (props: {isOpen:boolean, percentage:number}) => {
 
     return (
-        <Dialog open={loading.isOpen}>
+        <Dialog open={props.isOpen}>
             <DialogContent>
                 <DialogHeader className="b pb-3">
                     <div className="flex items-center justify-center">
@@ -35,6 +36,7 @@ export const LoadingModal = () => {
                         <Spinner size="lg"/>
                     </div>
                 </div>
+                <Progress value={props.percentage}/>
             </DialogContent>
         </Dialog>
     );
