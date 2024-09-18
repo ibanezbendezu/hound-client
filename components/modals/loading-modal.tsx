@@ -29,6 +29,7 @@ export const LoadingModal = () => {
                             className="hidden dark:block filter invert"
                         />
                     </div>
+                    <p className="text-sm text-muted-foreground items-center text-center flex justify-center">Esto puede tardar unos segundos ⌛</p>
                 </DialogHeader>
                 <div className="flex items-center justify-center">
                     <div className="flex flex-col gap-y-1">
