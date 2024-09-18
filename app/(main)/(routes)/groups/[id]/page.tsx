@@ -11,12 +11,14 @@ import {Bar, BarChart, CartesianGrid, XAxis, YAxis,} from "recharts"
 
 import {
     groupDataRequestBySha,
+    pairByIdDataRequest,
     pairSimilaritiesByGroupShaRequest
 } from "@/api/server-data";
-import {Box, CalendarClock, Folder, Eye, FileCode, ArrowRight} from "lucide-react";
+import {Box, CalendarClock, Folder, Eye, FileCode, ArrowRight, ArrowBigUp} from "lucide-react";
 import {PiGraphLight} from "react-icons/pi";
 import {formatDateTime, rgbToHex, colorScale} from "@/lib/utils";
 import {processSimilarityData} from "../_components/utils";
+import { PairDialog } from "./graph/_components/pair-dialog";
 
 const chartConfig = {
     amount: {
@@ -40,6 +42,11 @@ export default function GroupPage({params}: { params: any }) {
     const [group, setGroup] = useState<Group | null>(null);
     const [chartData, setChartData] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [threshold, setThreshold] = useState(0.75);
+
+    const [isPairOpen, setIsPairOpen] = useState(false);
+    const [pair, setPair] = useState<any>(null);
+
     const router = useRouter();
     const pathname = usePathname()
 
@@ -47,6 +54,33 @@ export default function GroupPage({params}: { params: any }) {
         const fetchData = async () => {
             const res = await groupDataRequestBySha(params.id);
             const data = res.data;
+            const matrix:number[][] = []
+            for (let i = 0; i < data.repositories.length; i++) {
+                matrix.push([]);
+                for (let j = 0; j < data.repositories.length; j++) {
+                    if (i !== j) {
+                        const jId = data.repositories[j].id;
+                        const links = data.repositories[i].children
+                            .flatMap((p: any) => p.children
+                                .flatMap((f: any) => f.links
+                                    .filter((l: any) => l.pairFileRepository === jId)));
+                        const similarity = links.filter((l: any) => l.similarity >= threshold).length / links.length;
+                        console.log(data.repositories[i].name, data.repositories[j].name, links.length, similarity);
+                        matrix[i][j] = similarity;
+                    } else {
+                        matrix[i][j] = 0; // No similarity with itself
+                    }
+                }
+                const max = Math.max(...matrix[i]);
+                const top = matrix[i].indexOf(max);
+                if (top !== -1 && data.repositories[top]) {
+                    const topRepository = data.repositories[top];
+                    data.repositories[i].top = { repository: topRepository.name, similarity: max };
+                    console.log(data.repositories[i].top);
+                } else {
+                    console.error(`Top repository not found for index ${i}`);
+                }
+            }
             setGroup(data);
 
             const cRes = await pairSimilaritiesByGroupShaRequest(params.id);
@@ -62,6 +96,14 @@ export default function GroupPage({params}: { params: any }) {
     const onSelect = (id: string) => {
         router.push(pathname + `/files/${id}`);
     };
+
+    const handlePair = async (e: any) => {
+        const res = await pairByIdDataRequest(e);
+        const pair = res.data;
+
+        setPair(pair);
+        setIsPairOpen(true);
+    }
 
     const onGraph = () => {
         router.push(pathname + `/graph`);
@@ -223,6 +265,15 @@ export default function GroupPage({params}: { params: any }) {
                                 <div className="flex gap-2">
                                     <Badge variant="secondary" className="border-muted-foreground">
                                         <span className="text-xs">
+                                            {"Top: "}
+                                            {repository.top.repository}
+                                            {" | "}
+                                            {Math.round(repository.top.similarity * 100)}
+                                            {"%"}
+                                        </span>
+                                    </Badge>
+                                    <Badge variant="secondary" className="border-muted-foreground">
+                                        <span className="text-xs">
                                             {"Nro. de folders: "}
                                             {repository.numberOfFolders}
                                         </span>
@@ -253,9 +304,10 @@ export default function GroupPage({params}: { params: any }) {
                                                     <Badge variant="color" className="pointer-events-none"
                                                            style={{backgroundColor: rgbToHex(colorScale(folder.fever * 100))}}>
                                                         <span className="text-xs">
-                                                            {"score grupo: "}
+                                                            {"promedio: "}
                                                             {(Math.round(folder.fever * 100))}
-                                                            {"%"}
+                                                            {"% | σ: "}
+                                                            {folder.standardDeviation.toFixed(2)}
                                                         </span>
                                                     </Badge>
                                                 </div>
@@ -270,17 +322,36 @@ export default function GroupPage({params}: { params: any }) {
                                                             <p className="text-xs font-semibold text-current">{file.name}</p>
                                                         </div>
                                                         <div className="flex items-center gap-2">
+                                                            
                                                             <Badge variant="secondary">
                                                                 <span className="text-xs">
-                                                                    {"Nro. de lineas: "}
+                                                                    {"Nro. lineas: "}
                                                                     {file.lines}
                                                                 </span>
                                                             </Badge>
                                                             <Badge variant="color" className="pointer-events-none"
                                                                    style={{backgroundColor: rgbToHex(colorScale(file.fever * 100))}}>
                                                                 <span className="text-xs">
-                                                                    {"score grupo: "}
+                                                                    {"match clase: "}
                                                                     {Math.round(file.fever * 100)}
+                                                                    {"%"}
+                                                                </span>
+                                                            </Badge>
+                                                            <Badge variant="secondary"
+                                                                className="hover:bg-primary/10 cursor-pointer"
+                                                                onClick={() => handlePair(file.top.pairId)}>
+                                                                <ArrowBigUp className="h-4 w-4 shrink-0"></ArrowBigUp>
+                                                                <span className="text-xs">
+                                                                    {"Top: "}
+                                                                    {file.top.repositoryName}
+                                                                    {" | "}
+                                                                </span>
+                                                                <b>
+                                                                    {file.top.pairFilePath.split('/').pop()}
+                                                                </b>
+                                                                <span className="text-xs">
+                                                                    {" | "}
+                                                                    {Math.round(file.top.similarity * 100)}
                                                                     {"%"}
                                                                 </span>
                                                             </Badge>
@@ -302,6 +373,12 @@ export default function GroupPage({params}: { params: any }) {
                     ))}
                 </Accordion>
             </div>
+            <PairDialog
+                isOpen={isPairOpen}
+                setIsOpen={setIsPairOpen}
+                pair={pair}
+            >
+            </PairDialog>
         </div>
     );
 };

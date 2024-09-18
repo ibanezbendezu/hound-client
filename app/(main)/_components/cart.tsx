@@ -96,7 +96,7 @@ export const Cart = () => {
                 clearInterval(pId);
                 clearInterval(iId);
 
-                addGroupToStore(summary.data);
+                addGroupToStore({ ...summary.data, repositories: repos });
                 emptyCart();
 
                 setIsOpen(false);

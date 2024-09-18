@@ -31,11 +31,11 @@ export const LoadingModal = (props: {isOpen:boolean, percentage:number}) => {
                         />
                     </div>
                 </DialogHeader>
-                <div className="flex items-center justify-center">
+                {/* <div className="flex items-center justify-center">
                     <div className="flex flex-col gap-y-1">
                         <Spinner size="lg"/>
                     </div>
-                </div>
+                </div> */}
                 <Progress value={props.percentage}/>
             </DialogContent>
         </Dialog>

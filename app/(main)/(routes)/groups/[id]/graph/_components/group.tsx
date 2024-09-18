@@ -145,6 +145,7 @@ export const Group: React.FC<GroupProps> = ({data, groupId}) => {
                 zoomingEnabled={true}
                 zoom={config.zoom}
                 style={{height: "100vh" as React.CSSProperties['height'], width: "100%"}}
+                pixelRatio={1}
             />
             <Legend/>
         </>

@@ -105,7 +105,7 @@ export default function AddForm({setIsOpen, cartCollapse}: Readonly<AddFormProps
         try {
             const username = profile.username;
             const data = await groupUpdateRequestBySha(groupSha, reposToAdd, username);
-            updateGroupInStore({id: values.grupo, updatedGroup: data.data});
+            updateGroupInStore({id: values.grupo, updatedGroup: {...data.data, repositories: reposToAdd}});
             emptyCart();
             setIsOpen(false);
             cartCollapse();
@@ -117,7 +117,7 @@ export default function AddForm({setIsOpen, cartCollapse}: Readonly<AddFormProps
 
     const options = store.map(group => ({
         value: group.id,
-        label: formatDateTime(group.groupDate),
+        label: formatDateTime(group.date),
     }));
 
     return (

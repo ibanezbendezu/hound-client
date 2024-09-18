@@ -71,7 +71,7 @@ export const graphStyles = [
         style: {
             width: 1.7,
             color: "#fff",
-            label: "data(similarity)",
+            //label: "data(similarity)",
             "line-color": "data(color)",
             "line-opacity": 0.8,
             "text-valign": "bottom",
