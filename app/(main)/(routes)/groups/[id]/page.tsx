@@ -78,7 +78,7 @@ export default function GroupPage({params}: { params: any }) {
                     const topRepository = data.repositories[top];
                     data.repositories[i].top = { repository: topRepository.name, similarity: max };
                 } else {
-                    console.error(`Top repository not found for index ${i}`);
+                    data.repositories[i].top = { repository: "Ninguno", similarity: 0 };
                 }
             }
             setGroup(data);

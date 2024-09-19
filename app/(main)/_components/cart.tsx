@@ -41,6 +41,7 @@ export const Cart = () => {
 
     const loading = useLoading();
     const [isAddOpen, setIsAddOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const [isOpen, setIsOpen] = useState(false);
     const [percentage, setPercentage] = useState(0);
@@ -138,8 +139,9 @@ export const Cart = () => {
                 setIsOpen={setIsAddOpen}
                 title="Agregar Repositorios"
                 description="Puedes añadir los proyectos seleccionados a una comparación que hayas creado anteriormente."
+                isLoading={isLoading}
             >
-                <AddForm setIsOpen={setIsAddOpen} cartCollapse={collapse}/>
+                <AddForm setIsOpen={setIsAddOpen} cartCollapse={collapse} setIsLoading={setIsLoading} />
             </AddDialog>
 
             <aside

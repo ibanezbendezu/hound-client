@@ -31,9 +31,10 @@ const formSchema = z.object({
 interface AddFormProps {
     setIsOpen: Dispatch<SetStateAction<boolean>>;
     cartCollapse: () => void;
+    setIsLoading: Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function AddForm({setIsOpen, cartCollapse}: Readonly<AddFormProps>) {
+export default function AddForm({setIsOpen, cartCollapse, setIsLoading}: Readonly<AddFormProps>) {
     const router = useRouter();
     const {profile} = useAuthStore(state => state);
     const {cart, emptyCart} = useCart(state => state);
@@ -103,6 +104,7 @@ export default function AddForm({setIsOpen, cartCollapse}: Readonly<AddFormProps
         }
         
         try {
+            setIsLoading(true);
             const username = profile.username;
             const data = await groupUpdateRequestBySha(groupSha, reposToAdd, username);
             updateGroupInStore({id: values.grupo, updatedGroup: {...data.data, repositories: reposToAdd}});

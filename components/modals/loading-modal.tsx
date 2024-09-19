@@ -1,11 +1,8 @@
 "use client";
 
 import {Dialog, DialogContent, DialogHeader} from "@/components/loading-dialog";
-import {useLoading} from "@/hooks/use-loading";
-import {Spinner} from "../spinner";
 import Image from "next/image";
 import { Progress } from "../ui/progress";
-import { useEffect, useState } from "react";
 
 export const LoadingModal = (props: {isOpen:boolean, percentage:number}) => {
 
