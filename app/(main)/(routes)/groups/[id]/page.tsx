@@ -68,15 +68,17 @@ export default function GroupPage({params}: { params: any }) {
                         console.log(data.repositories[i].name, data.repositories[j].name, links.length, similarity);
                         matrix[i][j] = similarity;
                     } else {
-                        matrix[i][j] = 0; // No similarity with itself
+                        matrix[i][j] = 0;
                     }
                 }
                 const max = Math.max(...matrix[i]);
                 const top = matrix[i].indexOf(max);
+                if (top) {
+                    console.log("Top", data.repositories[top]);
+                }
                 if (top !== -1 && data.repositories[top]) {
                     const topRepository = data.repositories[top];
                     data.repositories[i].top = { repository: topRepository.name, similarity: max };
-                    console.log(data.repositories[i].top);
                 } else {
                     console.error(`Top repository not found for index ${i}`);
                 }
