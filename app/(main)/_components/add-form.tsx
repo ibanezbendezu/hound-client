@@ -60,18 +60,18 @@ export default function AddForm({setIsOpen, cartCollapse}: Readonly<AddFormProps
         
         const prevRepos = group.repositories;
         const newRepos = cart.map(repo => ({
-            name: repo.name,
             owner: repo.owner.login,
+            name: repo.name,
         }));
 
         const existingRepos = newRepos.filter(newRepo =>
-            prevRepos.some((prevRepo: { name: any; owner: any; }) => 
+            prevRepos.some((prevRepo: { owner: any; name: any ;}) => 
                 prevRepo.name === newRepo.name && prevRepo.owner === newRepo.owner
             )
         );
 
         const reposToAdd = newRepos.filter(newRepo =>
-            !prevRepos.some((prevRepo: { name: any; owner: any; }) => 
+            !prevRepos.some((prevRepo: { owner: any; name: any; }) => 
                 prevRepo.name === newRepo.name && prevRepo.owner === newRepo.owner
             )
         );
