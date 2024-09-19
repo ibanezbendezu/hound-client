@@ -73,9 +73,7 @@ export default function GroupPage({params}: { params: any }) {
                 }
                 const max = Math.max(...matrix[i]);
                 const top = matrix[i].indexOf(max);
-                if (top) {
-                    console.log("Top", data.repositories[top]);
-                }
+
                 if (top !== -1 && data.repositories[top]) {
                     const topRepository = data.repositories[top];
                     data.repositories[i].top = { repository: topRepository.name, similarity: max };

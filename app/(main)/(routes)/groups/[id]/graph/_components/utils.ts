@@ -38,26 +38,26 @@ export function groupCytoscape(data: any) {
     data.repositories.forEach((repo: any) => {
         nodes.push({
             data: {
-                id: `repo-${repo.id}`,
+                id: `repo-${repo.sha}`,
                 label: repo.name,
                 type: 'repository',
             }
         });
-
+    
         repo.children.forEach((folder: any) => {
             const folderId = `folder-${repo.id}-${folder.name}`;
             nodes.push({
                 data: {
                     id: folderId,
                     label: folder.name,
-                    parent: `repo-${repo.id}`,
+                    parent: `repo-${repo.sha}`,
                     type: 'folder',
                     class: folder.folderType
                 }
             });
-
+    
             folder.children.forEach((file: any) => {
-                const fileId = `file-${file.id}`;
+                const fileId = `file-${file.sha}`;
                 nodes.push({
                     data: {
                         id: fileId,
@@ -68,24 +68,34 @@ export function groupCytoscape(data: any) {
                         sha: file.sha
                     }
                 });
-
+    
                 file.links.forEach((link: any) => {
-                    const exist = edges.some((edge) => edge.data.id === `edge-${link.pairId}`);
-                    if (!exist) {
-                        edges.push({
-                            data: {
-                                id: `edge-${link.pairId}`,
-                                source: fileId,
-                                target: `file-${link.pairFileId}`,
-
-                                sourceName: file.name,
-                                targetName: link.pairFilePath.split('/').pop(),
-                                similarity: Math.round(link.similarity * 100) + '%',
-                                color: colorScale(link.similarity * 100),
-                                impact: link.normalizedImpact,
-                                width: (Math.pow(link.normalizedImpact, 6) * 2) + 1.5, 
-                            },
-                        });
+                    const targetFileId = `file-${link.pairFileSha}`;
+                    const targetExists = nodes.some((node) => node.data.id === targetFileId);
+    
+                    // Log for debugging
+                    console.log(`Checking for target: ${targetFileId}, exists: ${targetExists}`);
+    
+                    // Only create edge if target exists
+                    if (targetExists) {
+                        const exist = edges.some((edge) => edge.data.id === `edge-${link.pairId}`);
+                        if (!exist) {
+                            edges.push({
+                                data: {
+                                    id: `edge-${link.pairId}`,
+                                    source: fileId,
+                                    target: targetFileId,
+                                    sourceName: file.name,
+                                    targetName: link.pairFilePath.split('/').pop(),
+                                    similarity: Math.round(link.similarity * 100) + '%',
+                                    color: colorScale(link.similarity * 100),
+                                    impact: link.normalizedImpact,
+                                    width: (Math.pow(link.normalizedImpact, 6) * 2) + 1.5, 
+                                },
+                            });
+                        }
+                    } else {
+                        console.warn(`Target file not found for link: ${link.pairId}`);
                     }
                 });
             });
