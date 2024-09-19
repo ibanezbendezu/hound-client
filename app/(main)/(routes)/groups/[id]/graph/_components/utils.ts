@@ -22,6 +22,8 @@ export function groupCytoscape(data: any) {
         targetName: string;
         color: string;
         similarity: string;
+        impact?: number;
+        width?: number;
     }
 
     interface Edge {
@@ -79,7 +81,9 @@ export function groupCytoscape(data: any) {
                                 sourceName: file.name,
                                 targetName: link.pairFilePath.split('/').pop(),
                                 similarity: Math.round(link.similarity * 100) + '%',
-                                color: colorScale(link.similarity * 100)
+                                color: colorScale(link.similarity * 100),
+                                impact: link.normalizedImpact,
+                                width: (Math.pow(link.normalizedImpact, 6) * 2) + 1.5, 
                             },
                         });
                     }
@@ -92,6 +96,7 @@ export function groupCytoscape(data: any) {
 }
 
 export function fileCytoscape(data: any) {
+    console.log("fileCytoscape", data);
     interface NodeData {
         id: string;
         label: string;
@@ -112,6 +117,8 @@ export function fileCytoscape(data: any) {
         targetName: string;
         color: string;
         similarity: string;
+        impact?: number;
+        width?: number;
     }
 
     interface Edge {
@@ -168,7 +175,9 @@ export function fileCytoscape(data: any) {
                     sourceName: sourceName,
                     targetName: fileName,
                     similarity: Math.round(similarity) + '%',
-                    color: colorScale(similarity)
+                    color: colorScale(similarity),
+                    impact: pair.normalizedImpact,
+                    width: (Math.pow(pair.normalizedImpact, 6) * 2) + 1.5, 
                 },
             });
 

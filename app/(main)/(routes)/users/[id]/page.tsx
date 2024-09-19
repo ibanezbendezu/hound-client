@@ -40,8 +40,10 @@ export default function UserPage({params}: { params: any }) {
     if (loading) {
         return (
             <div className="h-full flex items-center justify-center flex-col gap-10">
-                <div className="text-xl font-semibold text-center">Filtrando repositorios de {params.id}</div>
-                <div className="text-center text-muted-foreground text-base"> Esto puede tardar unos segundos...</div>
+                <div className="font-semibold text-center gap-5">
+                    <div className="text-xl">Filtrando repositorios de {params.id}</div>
+                    <div className="text-muted-foreground text-base"> Esto puede tardar unos segundos...</div>
+                </div>
                 <Spinner size="lg"/>
             </div>
         );

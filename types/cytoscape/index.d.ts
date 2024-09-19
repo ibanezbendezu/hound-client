@@ -6,4 +6,5 @@ declare module 'cytoscape-node-html-label';
 declare module 'cytoscape-context-menus';
 declare module 'cytoscape-popper';
 declare module 'cytoscape-fcose';
+declare module 'cytoscape-elk';
 declare module 'cytoscape-navigator';

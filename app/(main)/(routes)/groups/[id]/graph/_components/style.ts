@@ -69,7 +69,7 @@ export const graphStyles = [
     {
         selector: "edge",
         style: {
-            width: 1.7,
+            width: "data(width)",
             color: "#fff",
             //label: "data(similarity)",
             "line-color": "data(color)",
@@ -158,7 +158,7 @@ export const fileGraphStyles = [
     {
         selector: "edge",
         style: {
-            width: 1.7,
+            width: "data(width)",
             color: "#fff",
             label: "data(similarity)",
             "line-color": "data(color)",

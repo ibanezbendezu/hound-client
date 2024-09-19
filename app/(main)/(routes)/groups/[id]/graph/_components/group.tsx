@@ -1,7 +1,6 @@
 "use client"
 
 import React, {useState, useEffect} from 'react';
-import jquery from 'jquery';
 import cytoscape from 'cytoscape';
 import CytoscapeComponent from "react-cytoscapejs";
 import dagre from "cytoscape-dagre";
@@ -74,9 +73,7 @@ export const Group: React.FC<GroupProps> = ({data, groupId}) => {
             animate: false,
             randomize: true,
             fit: true,
-            nodeSeparation: 70,
-            idealEdgeLength: 130,
-        },
+            },
         zoom: 0.5,
     };
 
