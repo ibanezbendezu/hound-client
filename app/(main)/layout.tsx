@@ -5,9 +5,20 @@ import {Spinner} from "@/components/spinner";
 import {Navigation} from "./_components/navigation";
 import {Cart} from "./_components/cart";
 import {SearchCommand} from "@/components/search-command";
+import { useAuthStore } from '@/store/auth';
+import cookie from 'cookie';
 
 const MainLayout = ({children}: { children: React.ReactNode }) => {
     const [isLoading, setIsLoading] = useState(true);
+    const {setProfile} = useAuthStore();
+
+    useEffect(() => {
+        const profile = cookie.parse(document.cookie).user;
+
+        if (profile) {
+            setProfile(JSON.parse(profile))
+        }
+    }, [setProfile])
 
     useEffect(() => {
         setTimeout(() => {

@@ -9,7 +9,7 @@ export async function middleware(req: NextRequest) {
         const key = decodeURIComponent(tk);
         const [user, jwt] = key.split('@@');
 
-        const response = NextResponse.redirect(new URL('/welcome', req.url));
+        const response = NextResponse.redirect(new URL('/home', req.url));
 
         response.cookies.set('jwt', jwt);
         response.cookies.set('user', user);
@@ -20,7 +20,6 @@ export async function middleware(req: NextRequest) {
     const session = await getSession();
 
     if ( (req.nextUrl.pathname.startsWith("/home") ||
-            req.nextUrl.pathname.startsWith("/welcome") ||
             req.nextUrl.pathname.startsWith("/groups") ||
             req.nextUrl.pathname.startsWith("/users/")) && !session ) {
         console.log("No estas logueado");

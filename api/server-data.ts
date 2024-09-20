@@ -150,3 +150,14 @@ export const pairsByGroupShaDataRequest = async (sha: string, fileSha: string) =
         throw error;
     }
 }
+
+//USER INFO
+export const userInfoRequest = async () => {
+    try {
+        const res = await axios.get(`/profile`);
+        return {data: res.data};
+    } catch (error) {
+        console.error("Error fetching user info data:", error);
+        throw error;
+    }
+}
