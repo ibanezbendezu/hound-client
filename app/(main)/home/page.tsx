@@ -21,7 +21,7 @@ const Home = () => {
             <div className="py-4 flex items-center gap-2">
                 <ArrowUpLeft className="h-5 w-5 text-current"/>
                 <p className="text-sm font-normal text-muted-foreground">
-                    Puedes buscar repositorios haciendo click allí.
+                    Puedes buscar proyectos Spring Boot haciendo click allí.
                 </p>
             </div>
             <div className="py-2 flex items-center gap-2">
@@ -32,7 +32,7 @@ const Home = () => {
             </div>
             <div className="py-10 flex items-center gap-2 justify-end">
                 <p className="text-sm font-normal text-muted-foreground">
-                    Los repositorios seleccionados aparecerán en el carrito.
+                    Los repositorios seleccionados aparecerán en el carrito en la parte superior derecha.
                 </p>
                 <ArrowUp className="h-5 w-5 text-current"/>
             </div>

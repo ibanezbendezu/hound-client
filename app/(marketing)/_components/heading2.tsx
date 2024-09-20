@@ -9,7 +9,7 @@ export const Heading2 = () => {
                 <span className="underline">Hound.</span>
             </h1>
             <h3 className="text-sm sm:text-lg md:text-xl font-medium">
-                Compara fácilmente tus proyectos almacenados en GitHub.
+                Compara fácilmente tus proyectos Spring Boot monolíticos almacenados en GitHub.
             </h3>
         </div>
     );
