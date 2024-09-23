@@ -6,7 +6,7 @@ export const Footer = () => {
             <div
                 className="md:ml-auto w-full justify-between md:justify-end flex items-center gap-x-2 text-muted-foreground">
                 <Button variant="ghost" size="sm">
-                    Términos y condiciones
+                    USACH 2024.
                 </Button>
             </div>
         </div>

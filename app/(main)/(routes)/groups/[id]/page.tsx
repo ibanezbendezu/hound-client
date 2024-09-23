@@ -14,11 +14,14 @@ import {
     pairByIdDataRequest,
     pairSimilaritiesByGroupShaRequest
 } from "@/api/server-data";
-import {Box, CalendarClock, Folder, Eye, FileCode, ArrowRight, ArrowBigUp} from "lucide-react";
+import {Box, CalendarClock, Folder, Eye, FileCode, ArrowRight, ArrowBigUp, Info} from "lucide-react";
 import {PiGraphLight} from "react-icons/pi";
 import {formatDateTime, rgbToHex, colorScale} from "@/lib/utils";
 import {processSimilarityData} from "../_components/utils";
 import { PairDialog } from "./graph/_components/pair-dialog";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { TooltipHint } from "@/components/tooltip-hint";
 
 const chartConfig = {
     amount: {
@@ -152,7 +155,7 @@ export default function GroupPage({params}: { params: any }) {
 
                         <div className='flex justify-between items-center my-1 text-muted-foreground'>
                             <div className='font-normal text-sm'>
-                                N.º de folders del grupo
+                                N.º de carpetas del grupo
                             </div>
                             <Badge variant="secondary">
                                 {group?.numberOfFolders}
@@ -247,10 +250,82 @@ export default function GroupPage({params}: { params: any }) {
                 </CardContent>
             </Card>
 
-            <div className="mt-2 py-2 flex items-center gap-2">
+            <div className="mt-2 py-2 flex items-center gap-2 justify-between">
                 <p className="text-sm font-normal text-muted-foreground">
                     Resumen de los repositorios comparados.
                 </p>
+                <Popover>
+                    <PopoverTrigger asChild>
+                        <Button variant="secondary" className="text-xs" size="sm">
+                            <Info className="h-5 w-5 shrink-0"/>
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent side="left" className="w-[500px]">
+                        <div className="p-2">
+                            <p className="text-sm font-semibold pb-1 underline">
+                                {"Repositorios"}
+                            </p>
+                            <p className="text-xs font-normal text-muted-foreground">
+                                <span className="text-sm font-semibold text-muted-foreground">
+                                    Top
+                                </span>
+                                {" Repositorio más similar, basado en un umbral de similitud de " + (threshold * 100) + "%."}
+                            </p>
+                            <p className="text-xs font-normal text-muted-foreground">
+                                <span className="text-sm font-semibold text-muted-foreground">
+                                    Nro. de carpetas:
+                                </span>
+                                {" Cantidad de carpetas consideradas en el repositorio."}
+                            </p>
+                        </div>
+                        <div className="p-2">
+                            <p className="text-sm font-semibold pb-1 underline">
+                                {"Carpetas"}
+                            </p>
+                            <p className="text-xs font-normal text-muted-foreground">
+                                <span className="text-sm font-semibold text-muted-foreground">
+                                    Nro. de archivos:
+                                </span>
+                                {" Cantidad de archivos en la carpeta."}
+                            </p>
+                            <p className="text-xs font-normal text-muted-foreground">
+                                <span className="text-sm font-semibold text-muted-foreground">
+                                    Promedio:
+                                </span>
+                                {" Promedio de similitud de los archivos de la carpeta."}
+                            </p>
+                            <p className="text-xs font-normal text-muted-foreground">
+                                <span className="text-sm font-semibold text-muted-foreground">
+                                    σ:
+                                </span>
+                                {" Desviación estándar del promedio de similitud de los archivos de la carpeta."}
+                            </p>
+                        </div>
+                        <div className="p-2">
+                            <p className="text-sm font-semibold pb-1 underline">
+                                {"Archivos"}
+                            </p>
+                            <p className="text-xs font-normal text-muted-foreground">
+                                <span className="text-sm font-semibold text-muted-foreground">
+                                    Nro. lineas:
+                                </span>
+                                {" Cantidad de lineas en el archivo."}
+                            </p>
+                            <p className="text-xs font-normal text-muted-foreground">
+                                <span className="text-sm font-semibold text-muted-foreground">
+                                    Match clase:
+                                </span>
+                                {" Porcentaje de coincidencia con los archivos de su misma clase."}
+                            </p>
+                            <p className="text-xs font-normal text-muted-foreground">
+                                <span className="text-sm font-semibold text-muted-foreground">
+                                    Top:
+                                </span>
+                                {" Archivo más similar de su misma clase."}
+                            </p>
+                        </div>
+                    </PopoverContent>
+                </Popover>
             </div>
 
             <div className="flex items-center gap-2 w-full">
@@ -258,26 +333,31 @@ export default function GroupPage({params}: { params: any }) {
                     {group?.repositories.map((repository, index) => (
                         <AccordionItem key={index} value={index.toString()}>
                             <AccordionTrigger className="p-2 border-b-2 bg-muted text-primary hover:bg-primary/5">
+                                <TooltipHint text="Repositorio" side="bottom">
+                                    <div className="flex gap-2">
+                                        <Box className="h-5 w-5 shrink-0 opacity-50"></Box>
+                                        <p className="text-sm font-semibold">{repository.name}</p>
+                                    </div>
+                                </TooltipHint>
                                 <div className="flex gap-2">
-                                    <Box className="h-5 w-5 shrink-0 opacity-50"></Box>
-                                    <p className="text-sm font-semibold">{repository.name}</p>
-                                </div>
-                                <div className="flex gap-2">
-                                    <Badge variant="secondary" className="border-muted-foreground">
-                                        <span className="text-xs">
-                                            {"Top: "}
-                                            {repository.top.repository}
-                                            {" | "}
-                                            {Math.round(repository.top.similarity * 100)}
-                                            {"%"}
-                                        </span>
-                                    </Badge>
-                                    <Badge variant="secondary" className="border-muted-foreground">
-                                        <span className="text-xs">
-                                            {"Nro. de folders: "}
-                                            {repository.numberOfFolders}
-                                        </span>
-                                    </Badge>
+                                    <TooltipHint text="Repositorio más similar, basado en un umbral de similitud de 75%." side="bottom">
+                                        <div>
+                                            <Badge variant="secondary" className="border-muted-foreground">
+                                                <span className="text-xs">
+                                                    {"Top: "}{repository.top.repository}{" | "}{Math.round(repository.top.similarity * 100)}{"%"}
+                                                </span>
+                                            </Badge>
+                                        </div>
+                                    </TooltipHint>
+                                    <TooltipHint text="Cantidad de folders en el repositorio." side="bottom">
+                                        <div>
+                                            <Badge variant="secondary" className="border-muted-foreground">
+                                                <span className="text-xs">
+                                                    {"Nro. de carpetas: "}{repository.numberOfFolders}
+                                                </span>
+                                            </Badge>
+                                        </div>
+                                    </TooltipHint>
                                 </div>
                             </AccordionTrigger>
                             <AccordionContent>
@@ -285,82 +365,107 @@ export default function GroupPage({params}: { params: any }) {
                                     {repository.children.map((folder: any, index: any) => (
                                         <AccordionItem key={index} value={index.toString()}>
                                             <AccordionTrigger className="p-2 hover:bg-primary/5">
+                                                <TooltipHint text="Carpeta" side="bottom">
+                                                    <div className="flex gap-2">
+                                                        <Folder className="ml-2 h-5 w-5 shrink-0 opacity-50"></Folder>
+                                                        <p className="text-sm font-semibold text-muted-foreground">{folder.name}</p>
+                                                        <Badge variant="secondary">
+                                                            <span className="text-xs">
+                                                                {folder.folderType.charAt(0)}
+                                                            </span>
+                                                        </Badge>
+                                                    </div>
+                                                </TooltipHint>
                                                 <div className="flex gap-2">
-                                                    <Folder className="ml-2 h-5 w-5 shrink-0 opacity-50"></Folder>
-                                                    <p className="text-sm font-semibold text-muted-foreground">{folder.name}</p>
-                                                    <Badge variant="secondary">
-                                                        <span className="text-xs">
-                                                            {folder.folderType.charAt(0)}
-                                                        </span>
-                                                    </Badge>
-                                                </div>
-                                                <div className="flex gap-2">
-                                                    <Badge variant="secondary">
-                                                        <span className="text-xs">
-                                                            {"Nro. de archivos: "}
-                                                            {folder.numberOfFiles}
-                                                        </span>
-                                                    </Badge>
-                                                    <Badge variant="color" className="pointer-events-none"
-                                                           style={{backgroundColor: rgbToHex(colorScale(folder.fever * 100))}}>
-                                                        <span className="text-xs">
-                                                            {"promedio: "}
-                                                            {(Math.round(folder.fever * 100))}
-                                                            {"% | σ: "}
-                                                            {folder.standardDeviation.toFixed(2)}
-                                                        </span>
-                                                    </Badge>
+                                                    <TooltipHint text="Cantidad de lineas en la carpeta." side="bottom">
+                                                        <div>
+                                                            <Badge variant="secondary">
+                                                                <span className="text-xs">
+                                                                    {"Nro. de lineas totales: "}{folder.folderLines}
+                                                                </span>
+                                                            </Badge>
+                                                        </div>
+                                                    </TooltipHint>
+                                                    <TooltipHint text="Cantidad de archivos en la carpeta." side="bottom">
+                                                        <div>
+                                                            <Badge variant="secondary">
+                                                                <span className="text-xs">
+                                                                    {"Nro. de archivos: "}{folder.numberOfFiles}
+                                                                </span>
+                                                            </Badge>
+                                                        </div>
+                                                    </TooltipHint>
+                                                    <TooltipHint text="Promedio de similitud de los archivos de la carpeta y su desviación estándar." side="bottom">
+                                                        <div>
+                                                            <Badge variant="color" className="pointer-events-none"
+                                                                style={{backgroundColor: rgbToHex(colorScale(folder.fever * 100))}}>
+                                                                <span className="text-xs">
+                                                                    {"promedio: "}{(Math.round(folder.fever * 100))}{"% | σ: "}{folder.standardDeviation.toFixed(2)}
+                                                                </span>
+                                                            </Badge>
+                                                        </div>
+                                                    </TooltipHint>
                                                 </div>
                                             </AccordionTrigger>
                                             <AccordionContent>
                                                 {folder.children.map((file: any, index: any) => (
                                                     <div key={index}
                                                          className="p-2 flex items-center justify-between hover:bg-primary/5">
+                                                        <TooltipHint text="Archivo" side="bottom">
+                                                            <div className="flex items-center gap-2">
+                                                                <FileCode
+                                                                    className="ml-4 h-5 w-5 shrink-0 opacity-50"></FileCode>
+                                                                <p className="text-xs font-semibold text-current">{file.name}</p>
+                                                            </div>
+                                                        </TooltipHint>
                                                         <div className="flex items-center gap-2">
-                                                            <FileCode
-                                                                className="ml-4 h-5 w-5 shrink-0 opacity-50"></FileCode>
-                                                            <p className="text-xs font-semibold text-current">{file.name}</p>
-                                                        </div>
-                                                        <div className="flex items-center gap-2">
-                                                            
-                                                            <Badge variant="secondary">
-                                                                <span className="text-xs">
-                                                                    {"Nro. lineas: "}
-                                                                    {file.lines}
-                                                                </span>
-                                                            </Badge>
-                                                            <Badge variant="color" className="pointer-events-none"
-                                                                   style={{backgroundColor: rgbToHex(colorScale(file.fever * 100))}}>
-                                                                <span className="text-xs">
-                                                                    {"match clase: "}
-                                                                    {Math.round(file.fever * 100)}
-                                                                    {"%"}
-                                                                </span>
-                                                            </Badge>
-                                                            <Badge variant="secondary"
-                                                                className="hover:bg-primary/10 cursor-pointer"
-                                                                onClick={() => handlePair(file.top.pairId)}>
-                                                                <ArrowBigUp className="h-4 w-4 shrink-0"></ArrowBigUp>
-                                                                <span className="text-xs">
-                                                                    {"Top: "}
-                                                                    {file.top.repositoryName}
-                                                                    {" | "}
-                                                                </span>
-                                                                <b>
-                                                                    {file.top.pairFilePath.split('/').pop()}
-                                                                </b>
-                                                                <span className="text-xs">
-                                                                    {" | "}
-                                                                    {Math.round(file.top.similarity * 100)}
-                                                                    {"%"}
-                                                                </span>
-                                                            </Badge>
-                                                            <Badge variant="secondary"
-                                                                   className="hover:bg-primary/10 cursor-pointer"
-                                                                   onClick={() => onSelect(file.sha)}>
-                                                                {"ver"}
-                                                                <Eye className="h-4 w-4 shrink-0"></Eye>
-                                                            </Badge>
+                                                            <TooltipHint text="Cantidad de lineas en el archivo." side="bottom">
+                                                                <div>
+                                                                    <Badge variant="secondary">
+                                                                        <span className="text-xs">
+                                                                            {"Nro. lineas: "}{file.lines}
+                                                                        </span>
+                                                                    </Badge>
+                                                                </div>
+                                                            </TooltipHint>
+                                                            <TooltipHint text="Porcentaje de coincidencia con los archivos de su misma clase." side="bottom">
+                                                                <div>
+                                                                    <Badge variant="color" className="pointer-events-none"
+                                                                        style={{backgroundColor: rgbToHex(colorScale(file.fever * 100))}}>
+                                                                        <span className="text-xs">
+                                                                            {"match clase: "}{Math.round(file.fever * 100)}{"%"}
+                                                                        </span>
+                                                                    </Badge>
+                                                                </div>
+                                                            </TooltipHint>
+                                                            <TooltipHint text="Archivo más similar de su misma clase." side="bottom">
+                                                                <div>
+                                                                    <Badge variant="secondary"
+                                                                        className="hover:bg-primary/10 cursor-pointer"
+                                                                        onClick={() => handlePair(file.top.pairId)}>
+                                                                        <ArrowBigUp className="h-4 w-4 shrink-0"></ArrowBigUp>
+                                                                        <span className="text-xs">
+                                                                            {"Top: "}{file.top.repositoryName}{" | "}
+                                                                        </span>
+                                                                        <b>
+                                                                            {file.top.pairFilePath.split('/').pop()}
+                                                                        </b>
+                                                                        <span className="text-xs">
+                                                                            {" | "}{Math.round(file.top.similarity * 100)}{"%"}
+                                                                        </span>
+                                                                    </Badge>
+                                                                </div>
+                                                            </TooltipHint>
+                                                            <TooltipHint text="Comparar lado a lado." side="bottom">
+                                                                <div>
+                                                                    <Badge variant="secondary"
+                                                                        className="hover:bg-primary/10 cursor-pointer"
+                                                                        onClick={() => onSelect(file.sha)}>
+                                                                        {"ver"}
+                                                                        <Eye className="h-4 w-4 shrink-0"></Eye>
+                                                                    </Badge>
+                                                                </div>
+                                                            </TooltipHint>
                                                         </div>
                                                     </div>
                                                 ))}

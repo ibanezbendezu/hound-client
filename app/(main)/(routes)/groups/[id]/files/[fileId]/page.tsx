@@ -24,7 +24,7 @@ import {Box, User} from "lucide-react";
 import React from "react";
 import {Progress} from "@/components/ui/progress";
 import {Badge} from "@/components/ui/badge";
-import {colorScale} from "@/lib/utils";
+import {colorScale, rgbToHex} from "@/lib/utils";
 import { set } from "lodash";
 
 interface CodeViewerProps {
@@ -37,6 +37,8 @@ export default function FilePage({params}: { params: any }) {
     const [file, setFile] = useState<CodeViewerProps | null>(null);
     const [fileFragments, setFileFragments] = useState<any[]>([]);
     const [similarity, setSimilarity] = useState<number>(0);
+    const [impact, setImpact] = useState<number>(0);
+    const [longest, setLongest] = useState<number>(0);
 
     const [pairFile, setPairFile] = useState<CodeViewerProps | null>(null);
     const [loading, setLoading] = useState(true);
@@ -67,6 +69,8 @@ export default function FilePage({params}: { params: any }) {
         setFileFragments(value.sideFragments)
         setPairFile({code: pairFileContent.data, file: pairFile});
         setSimilarity(value.similarity * 100)
+        setImpact(value.normalizedImpact * 100)
+        setLongest(value.longestFragment)
     };
 
     if (loading) {
@@ -97,10 +101,18 @@ export default function FilePage({params}: { params: any }) {
                 </div>
             </div>
 
-            <div className="pb-2 flex items-center gap-2">
+            <div className="py-4 flex items-baseline justify-between">
                 <p className="text-sm font-mono text-muted-foreground">
                     {data.file.filepath}
                 </p>
+                <Badge variant="color" className="pointer-events-none"
+                        style={{backgroundColor: rgbToHex(colorScale(data.file.averageSimilarity * 100))}}>
+                    <span className="text-xs">
+                        {"match clase: "}
+                        {Math.round(data.file.averageSimilarity * 100)}
+                        {"%"}
+                    </span>
+                </Badge>
             </div>
 
             <div className="pt-4 pb-2 flex items-center gap-2">
@@ -147,6 +159,24 @@ export default function FilePage({params}: { params: any }) {
                         <div className="flex gap-2">
                             <Badge variant="secondary">
                                 {Math.round(similarity)}%
+                            </Badge>
+                        </div>
+                    </div>
+                    <p className="text-sm font-bold text-muted-foreground"> | </p>
+                    <div className="flex justify-start items-center gap-2">
+                        <div className="text-xs font-mono text-muted-foreground">Impacto:</div>
+                        <div className="flex gap-2">
+                            <Badge variant="secondary">
+                                {Math.round(impact)}%
+                            </Badge>
+                        </div>
+                    </div>
+                    <p className="text-sm font-bold text-muted-foreground"> | </p>
+                    <div className="flex justify-start items-center gap-2">
+                        <div className="text-xs font-mono text-muted-foreground">Longest:</div>
+                        <div className="flex gap-2">
+                            <Badge variant="secondary">
+                                {Math.round(longest)}
                             </Badge>
                         </div>
                     </div>

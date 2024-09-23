@@ -30,7 +30,7 @@ const Breadcrumbs = () => {
                                 ) : (
                                     <Link
                                         href={href}
-                                        className="text-muted-foreground font-mono text-sm hover:text-muted-foreground/70 px-1"
+                                        className="text-muted-foreground font-mono text-sm hover:text-primary px-1"
                                     >
                                         {label}
                                     </Link>

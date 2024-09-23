@@ -36,6 +36,9 @@ type GroupProps = {
 };
 
 export const Group: React.FC<GroupProps> = ({data, groupId}) => {
+    const [cy, setCy] = useState<any>(null);
+    const [layoutName, setLayoutName] = useState("fcose");
+
     const [isFileOpen, setIsFileOpen] = useState(false);
     const [isPairOpen, setIsPairOpen] = useState(false);
     const [file, setFile] = useState<any>(null);
@@ -69,7 +72,7 @@ export const Group: React.FC<GroupProps> = ({data, groupId}) => {
 
     const config = {
         layout: {
-            name: "fcose",
+            name: layoutName,
             animate: false,
             randomize: true,
             fit: true,
@@ -77,7 +80,6 @@ export const Group: React.FC<GroupProps> = ({data, groupId}) => {
         zoom: 0.5,
     };
 
-    const [cy, setCy] = useState<any>(null);
 
     useEffect(() => {
         if (cy) {
@@ -107,7 +109,7 @@ export const Group: React.FC<GroupProps> = ({data, groupId}) => {
                 }
             };
         }
-    }, [cy]);
+    }, [cy, layoutName, config.zoom]);
 
     return (
         <>
