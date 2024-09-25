@@ -209,7 +209,7 @@ export const Cart = () => {
                                      className="mx-3 gap-2 min-h-[27px] text-sm flex items-center text-muted-foreground font-medium">
                                     <Code className="shrink-0 h-[18px] w-[18px]"/>
                                     <span
-                                        className="overflow-hidden whitespace-nowrap"> {item.owner.login + "/" + item.name} </span>
+                                        className="overflow-hidden whitespace-nowrap"> {item.owner?.login + "/" + item.name} </span>
                                     <SquareX className="ml-auto shrink-0 h-[18px] w-[18px] items-end cursor-pointer"
                                              onClick={() => {
                                                  useCart.getState().removeItemFromCart({itemIndex: index});

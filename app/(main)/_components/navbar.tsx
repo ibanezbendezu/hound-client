@@ -22,9 +22,11 @@ export const Navbar = ({isCollapsed, onResetWidth}: NavbarProps) => {
                     className="h-6 w-6 text-muted-foreground"
                 />
             )}
-            <div className="pl-2">
-                <Breadcrumbs/>
-            </div>
+            {!pathname.includes("users") && (
+                <div className="pl-2">
+                    <Breadcrumbs/>
+                </div>
+            )}
             {/* {pathname.includes("graph") && (
                 <div className="flex flex-row items-center gap-x-4 ml-auto mr-auto font-mono text-muted-foreground">
                     <div className="flex flex-row items-center hover:text-primary">

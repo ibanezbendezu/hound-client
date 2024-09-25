@@ -12,7 +12,7 @@ import {formatMemberSince} from "@/lib/utils";
 import Repos from "../_components/repos";
 import {Spinner} from "@/components/spinner";
 import {Button} from "@/components/ui/button";
-import {ownerDataRequest, profileDataRequest} from '@/api/server-data';
+import {ownerDataRequest} from '@/api/server-data';
 
 export default function UserPage({params}: { params: any }) {
 

@@ -1,22 +1,5 @@
 import axios from "../lib/axios"
 
-export const profileDataRequest = async (username: string) => {
-    try {
-        const res = await axios.get(`/users/profile/${username}`);
-        let {repos, userProfile} = res.data;
-
-        repos = repos.filter((repo: { language: string }) => repo.language === "Java");
-        repos.sort((a: { created_at: string | number | Date; }, b: {
-            created_at: string | number | Date;
-        }) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-
-        return {userProfile, repos};
-    } catch (error) {
-        console.error("Error fetching profile data:", error);
-        throw error;
-    }
-}
-
 export const ownerDataRequest = async (owner: string) => {
     try {
         const res = await axios.get(`/github/profile/${owner}`);
@@ -158,6 +141,17 @@ export const userInfoRequest = async () => {
         return {data: res.data};
     } catch (error) {
         console.error("Error fetching user info data:", error);
+        throw error;
+    }
+}
+
+export const repositoriesDataRequest = async (repos: string, username: string) => {
+    try {
+        const requestBody = {repos, username};
+        const res = await axios.post(`/github/repositories/search`, requestBody);
+        return {data: res.data};
+    } catch (error) {
+        console.error("Error fetching repositories data:", error);
         throw error;
     }
 }

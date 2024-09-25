@@ -7,6 +7,7 @@ import {
     MenuIcon,
     Settings,
     Home,
+    PlusCircle,
 } from "lucide-react";
 import {useParams, usePathname, useRouter} from "next/navigation";
 import React, {ElementRef, useEffect, useRef, useState} from "react";
@@ -122,7 +123,8 @@ export const Navigation = () => {
                 <div>
                     <UserItem/>
                     <Item label="Inicio" icon={Home} onClick={() => router.push("/home")}/>
-                    <Item label="Buscar" icon={Search} isSearched onClick={search.onOpen}/>
+                    <Item label="Buscar usuarios" icon={Search} isSearched onClick={search.onOpen}/>
+                    <Item label="Añadir repositorios" icon={PlusCircle} onClick={() => router.push("/repositories")}/>
                     <Item label="Configuración" icon={Settings} onClick={settings.onOpen}/>
                 </div>
                 <div className="mt-4">
