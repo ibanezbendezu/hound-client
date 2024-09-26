@@ -204,6 +204,10 @@ export const Cart = () => {
                         </div>
                     ) : (
                         <div className="flex flex-col justify-start">
+                            <Button variant="destructive" className="text-sm h-6 mx-4" onClick={emptyCart}>
+                                Eliminar todos
+                            </Button>
+                            <div className="border-b border-primary/10 mx-4 mt-3 mb-2"></div>
                             {cartItems.map((item, index) => (
                                 <div key={index}
                                      className="mx-3 gap-2 min-h-[27px] text-sm flex items-center text-muted-foreground font-medium">

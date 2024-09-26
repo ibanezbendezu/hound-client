@@ -31,9 +31,10 @@ const FormSchema = z.object({
 
 interface ReposFormProps {
     setRepos: React.Dispatch<React.SetStateAction<any>>;
+    setLoading: Dispatch<SetStateAction<boolean>>;
 }
 
-export const ReposForm = ({setRepos}: ReposFormProps) => {
+export const ReposForm = ({setRepos, setLoading}: ReposFormProps) => {
     const {profile} = useAuthStore(state => state);
 
     const form = useForm<z.infer<typeof FormSchema>>({
@@ -54,11 +55,13 @@ export const ReposForm = ({setRepos}: ReposFormProps) => {
      
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
+            setLoading(true);
             const username = profile.username;
             const res = await repositoriesDataRequest(data.repos, username);
             console.log(res.data);
             setRepos(res.data);
             localStorage.setItem('repos', data.repos);
+            setLoading(false);
         } catch (error) {
             console.log(error);
         }
@@ -66,13 +69,13 @@ export const ReposForm = ({setRepos}: ReposFormProps) => {
     
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pt-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <FormField
                     control={form.control}
                     name="repos"
                     render={({ field }) => (
                         <FormItem>
-                            {/* <FormLabel>Enlista los repositorios que deseas agregar</FormLabel> */}
+                            <FormLabel>Lista los repositorios que deseas agregar</FormLabel>
                             <FormControl>
                                 <Textarea
                                     placeholder="Ejemplo: https://github.com/username/repo"
