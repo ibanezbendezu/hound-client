@@ -146,7 +146,7 @@ export const Navigation = () => {
                     isMobile && "left-0 w-full"
                 )}
             >
-                {!!params.id ? (
+                {!!params.id || pathname.includes("repositories") ? (
                     <Navbar isCollapsed={isCollapsed} onResetWidth={resetWidth}/>
                 ) : (
                     <nav className="bg-transparent px-3 py-3 w-full">
