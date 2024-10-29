@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {useEffect, useState} from 'react';
-import {fileContentRequest} from '@/api/server-data';
+import { useEffect, useState } from 'react';
+import { fileContentRequest } from '@/api/server-data';
 import {
     Dialog,
     DialogContent,
@@ -8,12 +8,12 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import {Badge} from '../../../../../../../components/ui/badge';
-import {Label} from '../../../../../../../components/ui/label';
-import {Progress} from '../../../../../../../components/ui/progress';
-import {CodeViewer} from '../../../../../../../components/code-viewer';
-import {Spinner} from '../../../../../../../components/spinner';
-import {GitCompareArrows} from 'lucide-react';
+import { Badge } from '../../../../../../../components/ui/badge';
+import { Label } from '../../../../../../../components/ui/label';
+import { Progress } from '../../../../../../../components/ui/progress';
+import { CodeViewer } from '../../../../../../../components/code-viewer';
+import { Spinner } from '../../../../../../../components/spinner';
+import { GitCompareArrows } from 'lucide-react';
 
 interface PairDialogProps {
     children?: React.ReactNode;
@@ -22,29 +22,30 @@ interface PairDialogProps {
     pair?: any;
 }
 
-export function PairDialog({isOpen, setIsOpen, pair}: PairDialogProps) {
+export function PairDialog({ isOpen, setIsOpen, pair }: PairDialogProps) {
     const [file1Content, setFile1Content] = useState<any>(null);
     const [file2Content, setFile2Content] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(false);
-    
+
     useEffect(() => {
+        // Solo ejecutar si el diálogo está abierto y pair está definido
+        if (!isOpen || !pair?.file1?.id || !pair?.file2?.id) return;
+
         let isMounted = true;
-    
+
         const fetchData = async () => {
+            setLoading(true);
             setFile1Content(null);
             setFile2Content(null);
-            setLoading(true);
             try {
-                if (pair && pair.file1 && pair.file2) {
-                    const file1Content = await fileContentRequest(pair.file1.id);
-                    const f1c = file1Content.data;
-                    const file2Content = await fileContentRequest(pair.file2.id);
-                    const f2c = file2Content.data;
-    
-                    if (isMounted) {
-                        setFile1Content(f1c);
-                        setFile2Content(f2c);
-                    }
+                const [file1Response, file2Response] = await Promise.all([
+                    fileContentRequest(pair.file1.id),
+                    fileContentRequest(pair.file2.id)
+                ]);
+
+                if (isMounted) {
+                    setFile1Content(file1Response.data);
+                    setFile2Content(file2Response.data);
                 }
             } catch (error) {
                 console.error('Error fetching file content:', error);
@@ -54,13 +55,13 @@ export function PairDialog({isOpen, setIsOpen, pair}: PairDialogProps) {
                 }
             }
         };
-    
+
         fetchData();
-    
+
         return () => {
             isMounted = false;
         };
-    }, [pair, fileContentRequest]);
+    }, [isOpen, pair?.file1?.id, pair?.file2?.id]);
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -70,7 +71,7 @@ export function PairDialog({isOpen, setIsOpen, pair}: PairDialogProps) {
                         <React.Fragment>
                             <DialogTitle>
                                 {pair.file1?.filepath.split("/").pop()}
-                                <GitCompareArrows size={20} className="inline-block mx-2"/>
+                                <GitCompareArrows size={20} className="inline-block mx-2" />
                                 {pair.file2?.filepath.split("/").pop()}
                             </DialogTitle>
 
@@ -88,7 +89,7 @@ export function PairDialog({isOpen, setIsOpen, pair}: PairDialogProps) {
                                 <Label>{Math.round(pair.similarity * 100)}%</Label>
                             </div>
                             {pair.similarity && (
-                                <Progress value={pair.similarity * 100}/>
+                                <Progress value={pair.similarity * 100} />
                             )}
                         </div>
                     }
@@ -103,39 +104,47 @@ export function PairDialog({isOpen, setIsOpen, pair}: PairDialogProps) {
                                 </div>
                                 {loading ? (
                                     <div className="h-48 flex items-center justify-center">
-                                        <Spinner size="lg"/>
+                                        <Spinner size="lg" />
                                     </div>
                                 ) : (
                                     <div className="space-y-2">
-                                        <CodeViewer code={file1Content} language={pair.file1?.language}
-                                                    highlightRange={pair.file1?.fragments} color={"#4d4d4d"}
-                                                    shouldScrollY={true}/>
+                                        <CodeViewer
+                                            code={file1Content}
+                                            language={pair.file1?.language}
+                                            highlightRange={pair.file1?.fragments}
+                                            color={"#4d4d4d"}
+                                            shouldScrollY={true}
+                                        />
                                     </div>
                                 )}
                             </div>
                             <div className="space-y-4">
                                 <div className="flex justify-between items-center gap-2">
-                                    <p className="font-mono text-xs  max-w-md truncate">{pair.file2?.filepath}</p>
+                                    <p className="font-mono text-xs max-w-md truncate">{pair.file2?.filepath}</p>
                                     <Badge variant='secondary' className='max-w-xs truncate'>
                                         {pair.file2.repository.name}
                                     </Badge>
                                 </div>
                                 {loading ? (
                                     <div className="h-48 flex items-center justify-center">
-                                        <Spinner size="lg"/>
+                                        <Spinner size="lg" />
                                     </div>
                                 ) : (
                                     <div className="space-y-2">
-                                        <CodeViewer code={file2Content} language={pair.file2?.language}
-                                                    highlightRange={pair.file2?.fragments} color={"#4d4d4d"}
-                                                    shouldScrollY={true}/>
+                                        <CodeViewer
+                                            code={file2Content}
+                                            language={pair.file2?.language}
+                                            highlightRange={pair.file2?.fragments}
+                                            color={"#4d4d4d"}
+                                            shouldScrollY={true}
+                                        />
                                     </div>
                                 )}
                             </div>
                         </div>
                     ) : (
                         <div className="h-32 flex items-center justify-center">
-                            <Spinner size="lg"/>
+                            <Spinner size="lg" />
                         </div>
                     )}
                 </div>

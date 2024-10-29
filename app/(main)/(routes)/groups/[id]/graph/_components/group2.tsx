@@ -10,7 +10,7 @@ import undoRedo from "cytoscape-undo-redo";
 import expandCollapse from 'cytoscape-expand-collapse';
 import popper from 'cytoscape-popper';
 import navigator from "cytoscape-navigator";
-import {graphStyles2} from './style';
+import {graphStyles} from './style';
 import "cytoscape-navigator/cytoscape.js-navigator.css";
 import "./style.css";
 
@@ -20,6 +20,7 @@ import {PairDialog} from '@/app/(main)/(routes)/groups/[id]/graph/_components/pa
 import {pairsByGroupShaDataRequest, pairByIdDataRequest} from '@/api/server-data';
 import {fileCytoscape} from './utils';
 import {Legend} from './legends';
+import { idea } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 //expandCollapse(cytoscape, jquery);
 cytoscape.use(dagre);
@@ -35,10 +36,11 @@ type GroupProps = {
     groupId: any;
 };
 
-export const Group: React.FC<GroupProps> = ({data, groupId}) => {
+export const Group2: React.FC<GroupProps> = ({groupId}) => {
     const [cy, setCy] = useState<any>(null);
-    const [layoutName, setLayoutName] = useState("cola");
+    const [layoutName, setLayoutName] = useState("fcose");
 
+    const [data, setData] = useState<any>(null);
     const [isFileOpen, setIsFileOpen] = useState(false);
     const [isPairOpen, setIsPairOpen] = useState(false);
     const [file, setFile] = useState<any>(null);
@@ -76,11 +78,8 @@ export const Group: React.FC<GroupProps> = ({data, groupId}) => {
             animate: false,
             randomize: true,
             fit: true,
-            avoidOverlap: true,
-            centerGraph: true,
-            padding: 50,
-            edgeSymDiffLength: 20,
-            edgeJaccardLength: 20,
+            idealEdgeLength: 100,
+            nodeRepulsion: 500000,
             },
         zoom: 0.5,
     };
@@ -90,7 +89,13 @@ export const Group: React.FC<GroupProps> = ({data, groupId}) => {
         if (cy) {
             cy.zoom(config.zoom);
             cy.expandCollapse({
-                layoutBy: config.layout,
+                layoutBy: {
+                    name: "preset",
+                    randomize: true,
+                    fit: true,
+                    animate: true,
+                    undoable: true,
+                },
                 collapseCueImage: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-up"><path d="m6 15 6-6 6 6"/></svg>',
                 expandCueImage: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>',
             });
@@ -136,7 +141,8 @@ export const Group: React.FC<GroupProps> = ({data, groupId}) => {
                     });
                 }}
                 layout={config.layout}
-                stylesheet={graphStyles2}
+                styleEnabled={true}
+                stylesheet={graphStyles}
                 elements={data}
                 wheelSensitivity={0.1}
                 zoomingEnabled={true}

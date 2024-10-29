@@ -8,6 +8,9 @@ export function groupCytoscape(data: any) {
         parent?: string;
         class?: string;
         sha?: string;
+        width?: number;
+        height?: number;
+        fontSize?: number;
     }
 
     interface Node {
@@ -24,6 +27,7 @@ export function groupCytoscape(data: any) {
         similarity: string;
         impact?: number;
         width?: number;
+        label?: string;
     }
 
     interface Edge {
@@ -58,6 +62,20 @@ export function groupCytoscape(data: any) {
     
             folder.children.forEach((file: any) => {
                 const fileId = `file-${file.sha}`;
+
+                const nameLength = file.name.length;
+
+                const minFontSize = 5;
+                const maxFontSize = 15;
+                const minWidth = 60;
+                const maxWidth = 200;
+                const minHeight = 50;
+                const maxHeight = 200;
+
+                const width = Math.min(Math.max(minWidth, maxWidth * (file.lines / 100) + nameLength), maxWidth);
+                const height = Math.min(Math.max(minHeight, maxHeight * (file.lines / 100)), maxHeight);
+                const fontSize = Math.min(Math.max(minFontSize, maxFontSize * (file.lines / 100)), maxFontSize);
+
                 nodes.push({
                     data: {
                         id: fileId,
@@ -65,7 +83,10 @@ export function groupCytoscape(data: any) {
                         parent: folderId,
                         type: 'file',
                         class: file.fileType,
-                        sha: file.sha
+                        sha: file.sha,
+                        width: width,
+                        height: height,
+                        fontSize: fontSize,
                     }
                 });
     
@@ -73,10 +94,8 @@ export function groupCytoscape(data: any) {
                     const targetFileId = `file-${link.pairFileSha}`;
                     const targetExists = nodes.some((node) => node.data.id === targetFileId);
     
-                    // Log for debugging
                     console.log(`Checking for target: ${targetFileId}, exists: ${targetExists}`);
     
-                    // Only create edge if target exists
                     if (targetExists) {
                         const exist = edges.some((edge) => edge.data.id === `edge-${link.pairId}`);
                         if (!exist) {
@@ -88,9 +107,11 @@ export function groupCytoscape(data: any) {
                                     sourceName: file.name,
                                     targetName: link.pairFilePath.split('/').pop(),
                                     similarity: Math.round(link.similarity * 100) + '%',
+                                    label: "S:" + Math.round(link.similarity * 100) + '% | I: '
+                                    + Math.round(link.normalizedImpact * 100) + '%',
                                     color: colorScale(link.similarity * 100),
                                     impact: link.normalizedImpact,
-                                    width: (Math.pow(link.normalizedImpact, 6) * 2) + 1.5, 
+                                    width: (Math.pow(link.normalizedImpact, 6) * 4) + 1.5,
                                 },
                             });
                         }
@@ -113,6 +134,11 @@ export function fileCytoscape(data: any) {
         type: string;
         parent?: string;
         class?: string;
+
+        sha?: string;
+        width?: number;
+        height?: number;
+        fontSize?: number;
     }
 
     interface Node {
@@ -129,6 +155,8 @@ export function fileCytoscape(data: any) {
         similarity: string;
         impact?: number;
         width?: number;
+
+        label?: string;
     }
 
     interface Edge {
@@ -165,13 +193,31 @@ export function fileCytoscape(data: any) {
             const pairId = pair.id;
             const fileId = `file-${pair.file.id}`;
             const fileName = pair.file.filepath.split('/').pop();
+
+            const nameLength = fileName.length;
+            const minFontSize = 5;
+            const maxFontSize = 15;
+            const minWidth = 60;
+            const maxWidth = 200;
+            const minHeight = 50;
+            const maxHeight = 200;
+
+            const width = Math.min(Math.max(minWidth, maxWidth * (pair.file.lines / 100) + nameLength), maxWidth);
+            const height = Math.min(Math.max(minHeight, maxHeight * (pair.file.lines / 100)), maxHeight);
+            const fontSize = Math.min(Math.max(minFontSize, maxFontSize * (pair.file.lines / 100)), maxFontSize);
+            
             nodes.push({
                 data: {
                     id: fileId,
                     label: fileName,
                     parent: repoId,
                     type: 'file',
-                    class: pair.file.type
+                    class: pair.file.type,
+
+                    sha: pair.file.sha,
+                    width: width,
+                    height: height,
+                    fontSize: fontSize
                 }
             });
 
@@ -185,9 +231,10 @@ export function fileCytoscape(data: any) {
                     sourceName: sourceName,
                     targetName: fileName,
                     similarity: Math.round(similarity) + '%',
+                    label: "S:" + Math.round(similarity) + '% | I: ' + Math.round(pair.normalizedImpact * 100) + '%',
                     color: colorScale(similarity),
                     impact: pair.normalizedImpact,
-                    width: (Math.pow(pair.normalizedImpact, 6) * 2) + 1.5, 
+                    width: (Math.pow(pair.normalizedImpact, 6) * 4) + 1.5, 
                 },
             });
 

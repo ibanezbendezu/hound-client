@@ -47,6 +47,26 @@ export const groupSummaryRequest = async (sha: string) => {
     }
 }
 
+export const groupReportRequest = async (sha: string) => {
+    try {
+        const res = await axios.get(`/groups/report/${sha}`);
+        return {data: res.data};
+    } catch (error) {
+        console.error("Error fetching group summary data:", error);
+        throw error;
+    }
+}
+
+export const groupOverallRequest = async (sha: string) => {
+    try {
+        const res = await axios.get(`/groups/overall/${sha}`);
+        return {data: res.data};
+    } catch (error) {
+        console.error("Error fetching group summary data:", error);
+        throw error;
+    }
+}
+
 export const groupUpdateRequest = async (id: number, repos: any[], username: any) => {
     try {
         const requestBody = {repos, username};

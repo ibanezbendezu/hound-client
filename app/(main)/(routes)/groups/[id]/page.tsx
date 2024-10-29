@@ -2,33 +2,20 @@
 
 import {useEffect, useState} from "react";
 import {useRouter, usePathname} from "next/navigation";
-import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {Spinner} from "@/components/spinner";
 import {Badge} from "@/components/ui/badge";
-import {ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent} from "@/components/ui/chart"
-import {Bar, BarChart, CartesianGrid, XAxis, YAxis,} from "recharts"
 
 import {
-    groupDataRequestBySha,
-    pairByIdDataRequest,
-    pairSimilaritiesByGroupShaRequest
+    groupOverallRequest,
 } from "@/api/server-data";
-import {Box, CalendarClock, Folder, Eye, FileCode, ArrowRight, ArrowBigUp, Info} from "lucide-react";
-import {PiGraphLight} from "react-icons/pi";
-import {formatDateTime, rgbToHex, colorScale} from "@/lib/utils";
-import {processSimilarityData} from "../_components/utils";
-import { PairDialog } from "./graph/_components/pair-dialog";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
+import {Box, CalendarClock, ArrowRight, ArrowBigUp} from "lucide-react";
+import {PiGraph} from "react-icons/pi";
+import {formatDateTime} from "@/lib/utils";
 import { TooltipHint } from "@/components/tooltip-hint";
-
-const chartConfig = {
-    amount: {
-        label: "Pares:",
-        color: "#2c4863",
-    },
-} satisfies ChartConfig
+import { GroupChart } from "../_components/group-chart";
+import { GroupInfoPopover } from "../_components/group-info-popover";
+import { GroupAccordion } from "../_components/group-accordion";
 
 interface Group {
     id: string;
@@ -41,72 +28,24 @@ interface Group {
 }
 
 export default function GroupPage({params}: { params: any }) {
-
-    const [group, setGroup] = useState<Group | null>(null);
-    const [chartData, setChartData] = useState<any[]>([]);
+    const [overallData, setOverallData] = useState<any>([]);
     const [loading, setLoading] = useState(true);
     const [threshold, setThreshold] = useState(0.75);
-
-    const [isPairOpen, setIsPairOpen] = useState(false);
-    const [pair, setPair] = useState<any>(null);
 
     const router = useRouter();
     const pathname = usePathname()
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await groupDataRequestBySha(params.id);
-            const data = res.data;
-            const matrix:number[][] = []
-            for (let i = 0; i < data.repositories.length; i++) {
-                matrix.push([]);
-                for (let j = 0; j < data.repositories.length; j++) {
-                    if (i !== j) {
-                        const jId = data.repositories[j].id;
-                        const links = data.repositories[i].children
-                            .flatMap((p: any) => p.children
-                                .flatMap((f: any) => f.links
-                                    .filter((l: any) => l.pairFileRepository === jId)));
-                        const similarity = links.filter((l: any) => l.similarity >= threshold).length / links.length;
-                        console.log(data.repositories[i].name, data.repositories[j].name, links.length, similarity);
-                        matrix[i][j] = similarity;
-                    } else {
-                        matrix[i][j] = 0;
-                    }
-                }
-                const max = Math.max(...matrix[i]);
-                const top = matrix[i].indexOf(max);
-
-                if (top !== -1 && data.repositories[top]) {
-                    const topRepository = data.repositories[top];
-                    data.repositories[i].top = { repository: topRepository.name, similarity: max };
-                } else {
-                    data.repositories[i].top = { repository: "Ninguno", similarity: 0 };
-                }
-            }
-            setGroup(data);
-
-            const cRes = await pairSimilaritiesByGroupShaRequest(params.id);
-            const cData = cRes.data;
-            setChartData(processSimilarityData(cData));
+            const oRes = await groupOverallRequest(params.id);
+            const oData = oRes.data;
+            setOverallData(oData);
 
             setLoading(false);
         };
 
         fetchData().then(r => r);
     }, [params.id]);
-
-    const onSelect = (id: string) => {
-        router.push(pathname + `/files/${id}`);
-    };
-
-    const handlePair = async (e: any) => {
-        const res = await pairByIdDataRequest(e);
-        const pair = res.data;
-
-        setPair(pair);
-        setIsPairOpen(true);
-    }
 
     const onGraph = () => {
         router.push(pathname + `/graph`);
@@ -128,7 +67,7 @@ export default function GroupPage({params}: { params: any }) {
                 </h2>
                 <Badge variant="secondary">
                     <CalendarClock className="h-4 w-4 shrink-0"></CalendarClock>
-                    {formatDateTime(group?.date)}
+                    {formatDateTime(overallData?.date)}
                 </Badge>
             </div>
 
@@ -149,16 +88,7 @@ export default function GroupPage({params}: { params: any }) {
                                 N.º de repositorios comparados
                             </div>
                             <Badge variant="secondary">
-                                {group?.numberOfRepos}
-                            </Badge>
-                        </div>
-
-                        <div className='flex justify-between items-center my-1 text-muted-foreground'>
-                            <div className='font-normal text-sm'>
-                                N.º de carpetas del grupo
-                            </div>
-                            <Badge variant="secondary">
-                                {group?.numberOfFolders}
+                                {overallData?.numberOfRepos}
                             </Badge>
                         </div>
 
@@ -167,7 +97,7 @@ export default function GroupPage({params}: { params: any }) {
                                 N.º de archivos del grupo
                             </div>
                             <Badge variant="secondary">
-                                {group?.numberOfFiles}
+                                {overallData?.numberOfFiles}
                             </Badge>
                         </div>
 
@@ -176,7 +106,7 @@ export default function GroupPage({params}: { params: any }) {
                                 Cantidad de lineas totales
                             </div>
                             <Badge variant="secondary">
-                                {group?.totalLines}
+                                {overallData?.groupLines}
                             </Badge>
                         </div>
                     </CardContent>
@@ -188,7 +118,7 @@ export default function GroupPage({params}: { params: any }) {
                     </CardHeader>
                     <CardContent>
                         <div className="flex justify-between">
-                            <PiGraphLight className="h-20 w-20 opacity-50"></PiGraphLight>
+                            <PiGraph className="h-14 w-14 opacity-50"></PiGraph>
                             <div className="flex flex-col justify-end">
                                 <ArrowRight className="h-6 w-6 opacity-50"></ArrowRight>
                             </div>
@@ -205,48 +135,7 @@ export default function GroupPage({params}: { params: any }) {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <ChartContainer
-                        config={chartConfig}
-                        className="aspect-auto h-[150px] w-full"
-                    >
-                        <BarChart
-                            accessibilityLayer
-                            data={chartData}
-                            margin={{
-                                left: 4,
-                                right: 4,
-                            }}
-                        >
-                            <CartesianGrid vertical={false}/>
-                            <XAxis
-                                dataKey="percent"
-                                type="number"
-                                domain={[0, 100]}
-                                tick={{fontSize: 11}}
-                                tickMargin={4}
-                                ticks={[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]}
-                                tickFormatter={(value) => `${value}%`}
-                            />
-                            <YAxis
-                                dataKey={"amount"}
-                                type="number"
-                                domain={[0, "dataMax + 1"]}
-                                allowDecimals={false}
-                                tick={{fontSize: 11}}
-                                tickMargin={4}
-                            />
-                            <ChartTooltip
-                                content={
-                                    <ChartTooltipContent
-                                        className="w-[150px]"
-                                        nameKey="amount"
-                                        labelFormatter={(value) => `Similitud: ${value}%`}
-                                    />
-                                }
-                            />
-                            <Bar dataKey="amount" fill="var(--color-amount)" radius={4} barSize={8}/>
-                        </BarChart>
-                    </ChartContainer>
+                    <GroupChart groupId={params.id}/>
                 </CardContent>
             </Card>
 
@@ -254,236 +143,12 @@ export default function GroupPage({params}: { params: any }) {
                 <p className="text-sm font-normal text-muted-foreground">
                     Resumen de los repositorios comparados.
                 </p>
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <Button variant="secondary" className="text-xs" size="sm">
-                            <Info className="h-5 w-5 shrink-0"/>
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent side="left" className="w-[500px]">
-                        <div className="p-2">
-                            <p className="text-sm font-semibold pb-1 underline">
-                                {"Repositorios"}
-                            </p>
-                            <p className="text-xs font-normal text-muted-foreground">
-                                <span className="text-sm font-semibold text-muted-foreground">
-                                    Top
-                                </span>
-                                {" Repositorio más similar, basado en un umbral de similitud de " + (threshold * 100) + "%."}
-                            </p>
-                            <p className="text-xs font-normal text-muted-foreground">
-                                <span className="text-sm font-semibold text-muted-foreground">
-                                    Nro. de carpetas:
-                                </span>
-                                {" Cantidad de carpetas consideradas en el repositorio."}
-                            </p>
-                        </div>
-                        <div className="p-2">
-                            <p className="text-sm font-semibold pb-1 underline">
-                                {"Carpetas"}
-                            </p>
-                            <p className="text-xs font-normal text-muted-foreground">
-                                <span className="text-sm font-semibold text-muted-foreground">
-                                    Nro. de archivos:
-                                </span>
-                                {" Cantidad de archivos en la carpeta."}
-                            </p>
-                            <p className="text-xs font-normal text-muted-foreground">
-                                <span className="text-sm font-semibold text-muted-foreground">
-                                    Promedio:
-                                </span>
-                                {" Promedio de similitud de los archivos de la carpeta."}
-                            </p>
-                            <p className="text-xs font-normal text-muted-foreground">
-                                <span className="text-sm font-semibold text-muted-foreground">
-                                    σ:
-                                </span>
-                                {" Desviación estándar del promedio de similitud de los archivos de la carpeta."}
-                            </p>
-                        </div>
-                        <div className="p-2">
-                            <p className="text-sm font-semibold pb-1 underline">
-                                {"Archivos"}
-                            </p>
-                            <p className="text-xs font-normal text-muted-foreground">
-                                <span className="text-sm font-semibold text-muted-foreground">
-                                    Nro. lineas:
-                                </span>
-                                {" Cantidad de lineas en el archivo."}
-                            </p>
-                            <p className="text-xs font-normal text-muted-foreground">
-                                <span className="text-sm font-semibold text-muted-foreground">
-                                    Match clase:
-                                </span>
-                                {" Porcentaje de coincidencia con los archivos de su misma clase."}
-                            </p>
-                            <p className="text-xs font-normal text-muted-foreground">
-                                <span className="text-sm font-semibold text-muted-foreground">
-                                    Top:
-                                </span>
-                                {" Archivo más similar de su misma clase."}
-                            </p>
-                        </div>
-                    </PopoverContent>
-                </Popover>
+                <GroupInfoPopover threshold={threshold}/>
             </div>
-
+            
             <div className="flex items-center gap-2 w-full">
-                <Accordion type="multiple" className="w-full border-x-2 border-y-2 rounded">
-                    {group?.repositories.map((repository, index) => (
-                        <AccordionItem key={index} value={index.toString()}>
-                            <AccordionTrigger className="p-2 border-b-2 bg-muted text-primary hover:bg-primary/5">
-                                <TooltipHint text="Repositorio" side="bottom">
-                                    <div className="flex gap-2">
-                                        <Box className="h-5 w-5 shrink-0 opacity-50"></Box>
-                                        <p className="text-sm font-semibold">{repository.name}</p>
-                                    </div>
-                                </TooltipHint>
-                                <div className="flex gap-2">
-                                    <TooltipHint text="Repositorio más similar, basado en un umbral de similitud de 75%." side="bottom">
-                                        <div>
-                                            <Badge variant="secondary" className="border-muted-foreground">
-                                                <span className="text-xs">
-                                                    {"Top: "}{repository.top.repository}{" | "}{Math.round(repository.top.similarity * 100)}{"%"}
-                                                </span>
-                                            </Badge>
-                                        </div>
-                                    </TooltipHint>
-                                    <TooltipHint text="Cantidad de folders en el repositorio." side="bottom">
-                                        <div>
-                                            <Badge variant="secondary" className="border-muted-foreground">
-                                                <span className="text-xs">
-                                                    {"Nro. de carpetas: "}{repository.numberOfFolders}
-                                                </span>
-                                            </Badge>
-                                        </div>
-                                    </TooltipHint>
-                                </div>
-                            </AccordionTrigger>
-                            <AccordionContent>
-                                <Accordion type="multiple">
-                                    {repository.children.map((folder: any, index: any) => (
-                                        <AccordionItem key={index} value={index.toString()}>
-                                            <AccordionTrigger className="p-2 hover:bg-primary/5">
-                                                <TooltipHint text="Carpeta" side="bottom">
-                                                    <div className="flex gap-2">
-                                                        <Folder className="ml-2 h-5 w-5 shrink-0 opacity-50"></Folder>
-                                                        <p className="text-sm font-semibold text-muted-foreground">{folder.name}</p>
-                                                        <Badge variant="secondary">
-                                                            <span className="text-xs">
-                                                                {folder.folderType.charAt(0)}
-                                                            </span>
-                                                        </Badge>
-                                                    </div>
-                                                </TooltipHint>
-                                                <div className="flex gap-2">
-                                                    <TooltipHint text="Cantidad de lineas en la carpeta." side="bottom">
-                                                        <div>
-                                                            <Badge variant="secondary">
-                                                                <span className="text-xs">
-                                                                    {"Nro. de lineas totales: "}{folder.folderLines}
-                                                                </span>
-                                                            </Badge>
-                                                        </div>
-                                                    </TooltipHint>
-                                                    <TooltipHint text="Cantidad de archivos en la carpeta." side="bottom">
-                                                        <div>
-                                                            <Badge variant="secondary">
-                                                                <span className="text-xs">
-                                                                    {"Nro. de archivos: "}{folder.numberOfFiles}
-                                                                </span>
-                                                            </Badge>
-                                                        </div>
-                                                    </TooltipHint>
-                                                    <TooltipHint text="Promedio de similitud de los archivos de la carpeta y su desviación estándar." side="bottom">
-                                                        <div>
-                                                            <Badge variant="color" className="pointer-events-none"
-                                                                style={{backgroundColor: rgbToHex(colorScale(folder.fever * 100))}}>
-                                                                <span className="text-xs">
-                                                                    {"promedio: "}{(Math.round(folder.fever * 100))}{"% | σ: "}{folder.standardDeviation.toFixed(2)}
-                                                                </span>
-                                                            </Badge>
-                                                        </div>
-                                                    </TooltipHint>
-                                                </div>
-                                            </AccordionTrigger>
-                                            <AccordionContent>
-                                                {folder.children.map((file: any, index: any) => (
-                                                    <div key={index}
-                                                         className="p-2 flex items-center justify-between hover:bg-primary/5">
-                                                        <TooltipHint text="Archivo" side="bottom">
-                                                            <div className="flex items-center gap-2">
-                                                                <FileCode
-                                                                    className="ml-4 h-5 w-5 shrink-0 opacity-50"></FileCode>
-                                                                <p className="text-xs font-semibold text-current">{file.name}</p>
-                                                            </div>
-                                                        </TooltipHint>
-                                                        <div className="flex items-center gap-2">
-                                                            <TooltipHint text="Cantidad de lineas en el archivo." side="bottom">
-                                                                <div>
-                                                                    <Badge variant="secondary">
-                                                                        <span className="text-xs">
-                                                                            {"Nro. lineas: "}{file.lines}
-                                                                        </span>
-                                                                    </Badge>
-                                                                </div>
-                                                            </TooltipHint>
-                                                            <TooltipHint text="Porcentaje de coincidencia con los archivos de su misma clase." side="bottom">
-                                                                <div>
-                                                                    <Badge variant="color" className="pointer-events-none"
-                                                                        style={{backgroundColor: rgbToHex(colorScale(file.fever * 100))}}>
-                                                                        <span className="text-xs">
-                                                                            {"match clase: "}{Math.round(file.fever * 100)}{"%"}
-                                                                        </span>
-                                                                    </Badge>
-                                                                </div>
-                                                            </TooltipHint>
-                                                            <TooltipHint text="Archivo más similar de su misma clase." side="bottom">
-                                                                <div>
-                                                                    <Badge variant="secondary"
-                                                                        className="hover:bg-primary/10 cursor-pointer"
-                                                                        onClick={() => handlePair(file.top.pairId)}>
-                                                                        <ArrowBigUp className="h-4 w-4 shrink-0"></ArrowBigUp>
-                                                                        <span className="text-xs">
-                                                                            {"Top: "}{file.top.repositoryName}{" | "}
-                                                                        </span>
-                                                                        <b>
-                                                                            {file.top.pairFilePath.split('/').pop()}
-                                                                        </b>
-                                                                        <span className="text-xs">
-                                                                            {" | "}{Math.round(file.top.similarity * 100)}{"%"}
-                                                                        </span>
-                                                                    </Badge>
-                                                                </div>
-                                                            </TooltipHint>
-                                                            <TooltipHint text="Comparar lado a lado." side="bottom">
-                                                                <div>
-                                                                    <Badge variant="secondary"
-                                                                        className="hover:bg-primary/10 cursor-pointer"
-                                                                        onClick={() => onSelect(file.sha)}>
-                                                                        {"ver"}
-                                                                        <Eye className="h-4 w-4 shrink-0"></Eye>
-                                                                    </Badge>
-                                                                </div>
-                                                            </TooltipHint>
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </AccordionContent>
-                                        </AccordionItem>
-                                    ))}
-                                </Accordion>
-                            </AccordionContent>
-                        </AccordionItem>
-                    ))}
-                </Accordion>
+                <GroupAccordion groupId={params.id} threshold={threshold}/>
             </div>
-            <PairDialog
-                isOpen={isPairOpen}
-                setIsOpen={setIsPairOpen}
-                pair={pair}
-            >
-            </PairDialog>
         </div>
     );
 };

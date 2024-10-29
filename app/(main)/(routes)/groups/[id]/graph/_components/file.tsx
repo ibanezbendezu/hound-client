@@ -1,7 +1,7 @@
 "use client"
 
 import React, {useState, useEffect} from 'react';
-import cytoscape, {Core} from 'cytoscape';
+import cytoscape from 'cytoscape';
 import CytoscapeComponent from "react-cytoscapejs";
 import dagre from "cytoscape-dagre";
 import fcose from "cytoscape-fcose";
@@ -41,10 +41,10 @@ export const File: React.FC<Props> = ({data}) => {
             animate: false,
             randomize: true,
             fit: true,
-            nodeSeparation: 70,
-            idealEdgeLength: 130,
-        },
-        zoom: 0.7,
+            idealEdgeLength: 100,
+            nodeRepulsion: 500000,
+            },
+        zoom: 0.5,
     };
 
     const [cy, setCy] = useState<any>(null);

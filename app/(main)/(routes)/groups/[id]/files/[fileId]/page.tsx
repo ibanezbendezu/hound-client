@@ -108,7 +108,7 @@ export default function FilePage({params}: { params: any }) {
                 <Badge variant="color" className="pointer-events-none"
                         style={{backgroundColor: rgbToHex(colorScale(data.file.averageSimilarity * 100))}}>
                     <span className="text-xs">
-                        {"match clase: "}
+                        {"match capa: "}
                         {Math.round(data.file.averageSimilarity * 100)}
                         {"%"}
                     </span>
