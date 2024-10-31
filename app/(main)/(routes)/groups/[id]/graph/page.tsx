@@ -3,8 +3,10 @@
 import {Spinner} from "@/components/spinner";
 import {useEffect, useState} from "react";
 import {Group} from "./_components/group";
-import {groupDataRequestBySha} from "@/api/server-data";
+import {groupDataRequestBySha, groupGraphRequest} from "@/api/server-data";
 import {groupCytoscape} from "./_components/utils";
+import { GroupB } from "./_components/groupB";
+//import { groupCytoscape } from './_components/utilsB';
 
 export default function GraphPage({params}: { params: any }) {
 

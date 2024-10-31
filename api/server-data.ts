@@ -67,6 +67,16 @@ export const groupOverallRequest = async (sha: string) => {
     }
 }
 
+export const groupGraphRequest = async (sha: string) => {
+    try {
+        const res = await axios.get(`/groups/graph/${sha}`);
+        return {data: res.data};
+    } catch (error) {
+        console.error("Error fetching group graph data:", error);
+        throw error;
+    }
+}
+
 export const groupUpdateRequest = async (id: number, repos: any[], username: any) => {
     try {
         const requestBody = {repos, username};

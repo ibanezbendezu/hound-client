@@ -41,8 +41,6 @@ export const File: React.FC<Props> = ({data}) => {
             animate: false,
             randomize: true,
             fit: true,
-            idealEdgeLength: 100,
-            nodeRepulsion: 500000,
             },
         zoom: 0.5,
     };

@@ -6,7 +6,7 @@ export function groupCytoscape(data: any) {
         label: string;
         type: string;
         parent?: string;
-        class?: string;
+        layer?: string;
         sha?: string;
         width?: number;
         height?: number;
@@ -40,31 +40,32 @@ export function groupCytoscape(data: any) {
     const colorScale = scaleLinear<string>().domain([0, 100]).range(["#2E9335", "#B82318"]);
 
     data.repositories.forEach((repo: any) => {
+        const repoId = `repo-${repo.sha}`;
         nodes.push({
             data: {
-                id: `repo-${repo.sha}`,
-                label: repo.name,
+                id: repoId,
+                label: repo.owner + "/" + repo.name,
                 type: 'repository',
             }
         });
     
-        repo.children.forEach((folder: any) => {
-            const folderId = `folder-${repo.id}-${folder.name}`;
+        repo.layers.forEach((layer: any) => {
+            const layerId = `layer-${repo.sha}-${layer.name}`;
             nodes.push({
                 data: {
-                    id: folderId,
-                    label: folder.name,
-                    parent: `repo-${repo.sha}`,
-                    type: 'folder',
-                    class: folder.folderType
+                    id: layerId,
+                    label: layer.name,
+                    parent: repoId,
+                    type: 'layer',
+                    layer: layer.layer
                 }
             });
     
-            folder.children.forEach((file: any) => {
+            layer.files.forEach((file: any) => {
                 const fileId = `file-${file.sha}`;
+                const fileName = file.filepath.split('/').pop();
 
-                const nameLength = file.name.length;
-
+                const nameLength = fileName.length;
                 const minFontSize = 5;
                 const maxFontSize = 15;
                 const minWidth = 60;
@@ -79,44 +80,44 @@ export function groupCytoscape(data: any) {
                 nodes.push({
                     data: {
                         id: fileId,
-                        label: file.name,
-                        parent: folderId,
+                        label: fileName,
+                        parent: layerId,
                         type: 'file',
-                        class: file.fileType,
+                        layer: file.layer,
                         sha: file.sha,
+
                         width: width,
                         height: height,
                         fontSize: fontSize,
                     }
                 });
     
-                file.links.forEach((link: any) => {
-                    const targetFileId = `file-${link.pairFileSha}`;
+                file.pairs.forEach((pair: any) => {
+                    const targetFileId = `file-${pair.sha}`;
                     const targetExists = nodes.some((node) => node.data.id === targetFileId);
     
                     console.log(`Checking for target: ${targetFileId}, exists: ${targetExists}`);
     
                     if (targetExists) {
-                        const exist = edges.some((edge) => edge.data.id === `edge-${link.pairId}`);
+                        const exist = edges.some((edge) => edge.data.id === `edge-${pair.id}`);
                         if (!exist) {
                             edges.push({
                                 data: {
-                                    id: `edge-${link.pairId}`,
+                                    id: `edge-${pair.id}`,
                                     source: fileId,
                                     target: targetFileId,
                                     sourceName: file.name,
-                                    targetName: link.pairFilePath.split('/').pop(),
-                                    similarity: Math.round(link.similarity * 100) + '%',
-                                    label: "S:" + Math.round(link.similarity * 100) + '% | I: '
-                                    + Math.round(link.normalizedImpact * 100) + '%',
-                                    color: colorScale(link.similarity * 100),
-                                    impact: link.normalizedImpact,
-                                    width: (Math.pow(link.normalizedImpact, 6) * 4) + 1.5,
+                                    targetName: pair.filepath.split('/').pop(),
+                                    similarity: Math.round(pair.similarity * 100) + '%',
+                                    label: "S:" + Math.round(pair.similarity * 100) + '% | I: ' + Math.round(pair.normalizedImpact * 100) + '%',
+                                    color: colorScale(pair.similarity * 100),
+                                    impact: pair.normalizedImpact,
+                                    width: (Math.pow(pair.normalizedImpact, 6) * 4) + 1.5,
                                 },
                             });
                         }
                     } else {
-                        console.warn(`Target file not found for link: ${link.pairId}`);
+                        console.warn(`Target file not found for link: ${pair.id}`);
                     }
                 });
             });
