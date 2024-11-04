@@ -73,9 +73,9 @@ export function groupCytoscape(data: any) {
                 const minHeight = 50;
                 const maxHeight = 200;
 
-                const width = Math.min(Math.max(minWidth, maxWidth * (file.lines / 100) + nameLength), maxWidth);
-                const height = Math.min(Math.max(minHeight, maxHeight * (file.lines / 100)), maxHeight);
-                const fontSize = Math.min(Math.max(minFontSize, maxFontSize * (file.lines / 100)), maxFontSize);
+                const width = Math.min(Math.max(minWidth, maxWidth * (file.lineCount / 100) + nameLength), maxWidth);
+                const height = Math.min(Math.max(minHeight, maxHeight * (file.lineCount / 100)), maxHeight);
+                const fontSize = Math.min(Math.max(minFontSize, maxFontSize * (file.lineCount / 100)), maxFontSize);
 
                 nodes.push({
                     data: {

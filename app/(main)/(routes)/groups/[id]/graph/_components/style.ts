@@ -129,8 +129,7 @@ export const graphStyles2 = [
     {
         selector: "node[type = 'repository']",
         style: {
-            "font-size": "40px",
-            "font-weight": "bold",
+            "font-size": "35px",
             "background-color": "#262626",
             "background-opacity": 0.9,
             "border-width": "0px",
@@ -180,7 +179,6 @@ export const graphStyles2 = [
             "line-color": "data(color)",
             "line-opacity": 0.8,
             "text-valign": "bottom",
-            "font-weight": "bold",
             "font-size": "5px",
             "curve-style": "bezier",
             "source-endpoint": "outside-to-node",
@@ -235,7 +233,6 @@ export const fileGraphStyles = [
         selector: "node[type = 'repository']",
         style: {
             "font-size": "30px",
-            "font-weight": "bold",
             "background-color": "#343434",
             "background-opacity": 0.9,
             "border-width": "0px",

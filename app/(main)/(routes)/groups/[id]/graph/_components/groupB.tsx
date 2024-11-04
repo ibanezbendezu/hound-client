@@ -10,7 +10,7 @@ import undoRedo from "cytoscape-undo-redo";
 import expandCollapse from 'cytoscape-expand-collapse';
 import popper from 'cytoscape-popper';
 import navigator from "cytoscape-navigator";
-import {graphStyles2} from './style';
+import {graphStyles2} from './styleB';
 import "cytoscape-navigator/cytoscape.js-navigator.css";
 import "./style.css";
 

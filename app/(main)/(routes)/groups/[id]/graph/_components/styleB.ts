@@ -130,14 +130,13 @@ export const graphStyles2 = [
         selector: "node[type = 'repository']",
         style: {
             "font-size": "40px",
-            "font-weight": "bold",
             "background-color": "#262626",
             "background-opacity": 0.9,
             "border-width": "0px",
         },
     },
     {
-        selector: "node[class='Service'][type='folder']",
+        selector: "node[layer='Service'][type='layer']",
         style: {
             "font-size": "30px",
             "background-color": "#293540",
@@ -146,7 +145,7 @@ export const graphStyles2 = [
         },
     },
     {
-        selector: "node[class = 'Controller'][type='folder']",
+        selector: "node[layer='Controller'][type='layer']",
         style: {
             "background-color": "#384047",
             "background-opacity": 0.6,
@@ -155,7 +154,7 @@ export const graphStyles2 = [
         },
     },
     {
-        selector: "node[class = 'Repository'][type='folder']",
+        selector: "node[layer='Repository'][type='layer']",
         style: {
             "font-size": "30px",
             "background-color": "#41413e",
@@ -180,7 +179,6 @@ export const graphStyles2 = [
             "line-color": "data(color)",
             "line-opacity": 0.8,
             "text-valign": "bottom",
-            "font-weight": "bold",
             "font-size": "5px",
             "curve-style": "bezier",
             "source-endpoint": "outside-to-node",

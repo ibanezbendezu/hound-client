@@ -4,9 +4,9 @@ import {Spinner} from "@/components/spinner";
 import {useEffect, useState} from "react";
 import {Group} from "./_components/group";
 import {groupDataRequestBySha, groupGraphRequest} from "@/api/server-data";
-import {groupCytoscape} from "./_components/utils";
+//import {groupCytoscape} from "./_components/utils";
 import { GroupB } from "./_components/groupB";
-//import { groupCytoscape } from './_components/utilsB';
+import { groupCytoscape } from './_components/utilsB';
 
 export default function GraphPage({params}: { params: any }) {
 
@@ -15,7 +15,7 @@ export default function GraphPage({params}: { params: any }) {
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await groupDataRequestBySha(params.id);
+            const res = await groupGraphRequest(params.id);
 
             const cytoscapeFormat = groupCytoscape(res.data)
             const elements = [
@@ -39,7 +39,7 @@ export default function GraphPage({params}: { params: any }) {
 
     return (
         <div className="min-h-full flex flex-col dark:bg-[#1F1F1F]">
-            {data && <Group data={data} groupId={params.id}/>}
+            {data && <GroupB data={data} groupId={params.id}/>}
         </div>
     );
 };
