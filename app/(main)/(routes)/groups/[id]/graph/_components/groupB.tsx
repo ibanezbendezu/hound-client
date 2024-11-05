@@ -75,14 +75,14 @@ export const GroupB: React.FC<GroupProps> = ({data, groupId}) => {
             name: layoutName,
             animate: false,
             randomize: true,
-            fit: true,
             avoidOverlap: true,
             centerGraph: true,
             padding: 50,
             edgeSymDiffLength: 20,
             edgeJaccardLength: 20,
+
             },
-        zoom: 0.5,
+        zoom: 0.35,
     };
 
 
@@ -142,7 +142,7 @@ export const GroupB: React.FC<GroupProps> = ({data, groupId}) => {
                 zoomingEnabled={true}
                 zoom={config.zoom}
                 style={{height: "100vh" as React.CSSProperties['height'], width: "100%"}}
-                pixelRatio={1}
+                pixelRatio={0.9}
             />
             <Legend/>
         </>

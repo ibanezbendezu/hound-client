@@ -129,7 +129,8 @@ export const graphStyles2 = [
     {
         selector: "node[type = 'repository']",
         style: {
-            "font-size": "40px",
+            "font-size": "35px",
+            "font-weight": "bold",
             "background-color": "#262626",
             "background-opacity": 0.9,
             "border-width": "0px",
@@ -174,7 +175,7 @@ export const graphStyles2 = [
         selector: "edge",
         style: {
             width: "data(width)",
-            color: "#fff",
+            color: "#c7cbd1",
             label: "data(label)",
             "line-color": "data(color)",
             "line-opacity": 0.8,

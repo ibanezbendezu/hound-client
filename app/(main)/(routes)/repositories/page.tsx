@@ -5,6 +5,7 @@ import {Spinner} from "@/components/spinner";
 import { DataTable } from "./_components/data-table";
 import { ReposForm } from "./_components/repos-form";
 import Repos from "../users/_components/repos";
+import { Code } from "lucide-react";
 
 export default function RepositoriesPage({params}: { params: any }) {
     const [repos, setRepos] = useState([]);
@@ -25,10 +26,15 @@ export default function RepositoriesPage({params}: { params: any }) {
                     {repos.length === 0 && !loading ? (
                         <div className="flex items-center justify-center h-32">
                             Acá se mostrarán los repositorios que añadas.
+                            <Code className="ml-2"/>
                         </div>
                     ) : (
                         loading ? (
-                            <div className="flex items-center justify-center h-32 md:w-full w-full">
+                            <div className="flex items-center justify-center h-32 md:w-full w-full flex-col gap-2">
+                                <div className="font-semibold text-center gap-5">
+                                    <div className="text-lg">Filtrando repositorios de {params.id}</div>
+                                    <div className="text-muted-foreground text-sm"> Esto puede tardar unos segundos...</div>
+                                </div>
                                 <Spinner size="lg"/>
                             </div>
                         ) : (

@@ -103,7 +103,7 @@ export default function GroupPage({params}: { params: any }) {
 
                         <div className='flex justify-between items-center my-1 text-muted-foreground'>
                             <div className='font-normal text-sm'>
-                                Cantidad de lineas totales
+                                N.º de lineas totales
                             </div>
                             <Badge variant="secondary">
                                 {overallData?.groupLines}

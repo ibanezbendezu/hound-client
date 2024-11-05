@@ -128,7 +128,7 @@ export const GroupAccordion = ({groupId, threshold} : {groupId: string, threshol
                                                 <div>
                                                     <Badge variant="secondary">
                                                         <span className="text-xs">
-                                                            {"Nro. de lineas totales: "}{c.classLines}
+                                                            {"N.º de lineas totales: "}{c.classLines}
                                                         </span>
                                                     </Badge>
                                                 </div>
@@ -137,7 +137,7 @@ export const GroupAccordion = ({groupId, threshold} : {groupId: string, threshol
                                                 <div>
                                                     <Badge variant="secondary">
                                                         <span className="text-xs">
-                                                            {"Nro. de archivos: "}{c.numberOfFiles}
+                                                            {"N.º de archivos: "}{c.numberOfFiles}
                                                         </span>
                                                     </Badge>
                                                 </div>
@@ -171,7 +171,7 @@ export const GroupAccordion = ({groupId, threshold} : {groupId: string, threshol
                                                         <div>
                                                             <Badge variant="secondary">
                                                                 <span className="text-xs">
-                                                                    {"Nro. lineas: "}{file.lineCount}
+                                                                    {"Lineas: "}{file.lineCount}
                                                                 </span>
                                                             </Badge>
                                                         </div>
@@ -191,15 +191,12 @@ export const GroupAccordion = ({groupId, threshold} : {groupId: string, threshol
                                                             <Badge variant="secondary"
                                                                 className="hover:bg-primary/10 cursor-pointer"
                                                                 onClick={() => handlePair(file.top.id)}>
-                                                                <ArrowBigUp className="h-4 w-4 shrink-0"></ArrowBigUp>
+                                                                {/* <ArrowBigUp className="h-4 w-4 shrink-0"></ArrowBigUp> */}
                                                                 {"Top: "}
                                                                 <b>
-                                                                    {file.top?.filepath.split("/").pop()}
+                                                                    {file.top?.filepath.split("/").pop() + "/" + file.top?.repositoryName}
                                                                 </b>
-                                                                <span className="text-xs">
-                                                                    {" | "}{file.top?.repositoryName}
-                                                                    {" | S: "}{Math.round(file.top.similarity * 100)}{"%"}
-                                                                </span>
+                                                                {" | "}{Math.round(file.top.similarity * 100)}{"%"}
                                                             </Badge>
                                                         </div>
                                                     </TooltipHint>
