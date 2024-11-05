@@ -109,6 +109,15 @@ export const groupDeleteRequestBySha = async (sha: string) => {
     }
 }
 
+export const groupsByUsernameRequest = async (username: string) => {
+    try {
+        const res = await axios.get(`/groups/user/${username}`);
+        return {data: res.data};
+    } catch (error) {
+        console.error("Error fetching groups data:", error);
+        throw error;
+    }
+}
 
 //FILES
 export const fileContentRequest = async (id: number) => {

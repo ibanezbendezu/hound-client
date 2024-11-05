@@ -119,7 +119,7 @@ export default function AddForm({setIsOpen, cartCollapse, setIsLoading}: Readonl
 
     const options = store.map(group => ({
         value: group.id,
-        label: formatDateTime(group.date),
+        label: formatDateTime(group.groupDate),
     }));
 
     return (

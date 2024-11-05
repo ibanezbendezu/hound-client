@@ -5,7 +5,8 @@ import {Spinner} from "@/components/spinner";
 import { DataTable } from "./_components/data-table";
 import { ReposForm } from "./_components/repos-form";
 import Repos from "../users/_components/repos";
-import { Code } from "lucide-react";
+import {Code, SquareSlash} from "lucide-react";
+import {BsSlash} from "react-icons/bs";
 
 export default function RepositoriesPage({params}: { params: any }) {
     const [repos, setRepos] = useState([]);
@@ -25,8 +26,8 @@ export default function RepositoriesPage({params}: { params: any }) {
                 <div className="md:w-2/3 w-full px-1 pt-2 md:px-0">
                     {repos.length === 0 && !loading ? (
                         <div className="flex items-center justify-center h-32">
-                            Acá se mostrarán los repositorios que añadas.
-                            <Code className="ml-2"/>
+                            Acá se mostrarán los repositorios filtrados
+                            <SquareSlash className="text-muted-foreground mx-2"/>
                         </div>
                     ) : (
                         loading ? (
