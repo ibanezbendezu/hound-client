@@ -21,7 +21,7 @@ interface Group {
 }
 
 export const GroupAccordion = ({groupId, threshold} : {groupId: string, threshold: number}) => {
-    console.log("GroupAccordion", groupId, threshold);
+    //console.log("GroupAccordion", groupId, threshold);
     const [loading, setLoading] = useState(true);
     const [group, setGroup] = useState<Group | null>(null);
     const [pair, setPair] = useState<any | null>(null);
@@ -46,7 +46,7 @@ export const GroupAccordion = ({groupId, threshold} : {groupId: string, threshol
                                 .flatMap((f: any) => f.pairs
                                     .filter((p: any) => p.repositoryId === jId)));
                         const similarity = pairs.filter((p: any) => p.similarity >= threshold).length / pairs.length;
-                        console.log(data.repositories[i].name, data.repositories[j].name, pairs.length, similarity);
+                        //console.log(data.repositories[i].name, data.repositories[j].name, pairs.length, similarity);
                         matrix[i][j] = similarity;
                     } else {
                         matrix[i][j] = 0;
@@ -240,5 +240,5 @@ GroupAccordion.Skeleton = function GroupAccordionSkeleton() {
 function truncateFilePath(filepath: string): string {
     const parts = filepath.split('/');
     const truncatedParts = parts.slice(-3).join('/');
-    return truncatedParts.length > 55 ? '...' + truncatedParts.slice(-55) : truncatedParts;
+    return truncatedParts.length > 40 ? '...' + truncatedParts.slice(-40) : truncatedParts;
 }

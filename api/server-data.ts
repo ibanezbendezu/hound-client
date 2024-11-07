@@ -100,11 +100,11 @@ export const groupUpdateRequestBySha = async (sha: string, repos: any[], usernam
 }
 
 export const groupDeleteRequestBySha = async (sha: string) => {
+    console.log("groupDeleteRequestBySha", sha);
     try {
-        const res = await axios.delete(`/groups/sha/${sha}`);
+        const res = await axios.delete(`/groups/${sha}`);
         return {data: res.data};
     } catch (error) {
-        console.error("Error fetching group delete data:", error);
         throw error;
     }
 }

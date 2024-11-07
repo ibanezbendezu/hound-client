@@ -129,7 +129,6 @@ export const graphStyles2 = [
     {
         selector: "node[type = 'repository']",
         style: {
-            "font-size": "35px",
             "font-weight": "bold",
             "background-color": "#262626",
             "background-opacity": 0.9,
@@ -139,10 +138,14 @@ export const graphStyles2 = [
     {
         selector: "node[layer='Service'][type='layer']",
         style: {
-            "font-size": "30px",
             "background-color": "#293540",
             "background-opacity": 0.6,
             "border-width": "0px",
+
+            "text-background-color": "#293540",
+            "text-background-opacity": 0.6,
+            "text-background-padding": "5px",
+            "text-background-shape": "round-rectangle",
         },
     },
     {
@@ -150,17 +153,25 @@ export const graphStyles2 = [
         style: {
             "background-color": "#384047",
             "background-opacity": 0.6,
-            "font-size": "30px",
             "border-width": "0px",
+
+            "text-background-color": "#384047",
+            "text-background-opacity": 0.6,
+            "text-background-padding": "5px",
+            "text-background-shape": "round-rectangle",
         },
     },
     {
         selector: "node[layer='Repository'][type='layer']",
         style: {
-            "font-size": "30px",
             "background-color": "#41413e",
             "background-opacity": 0.6,
             "border-width": "0px",
+
+            "text-background-color": "#41413e",
+            "text-background-opacity": 0.6,
+            "text-background-padding": "5px",
+            "text-background-shape": "round-rectangle",
         },
     },
     {
@@ -227,7 +238,7 @@ export const fileGraphStyles = [
         selector: "node:parent",
         style: {
             "text-valign": "top",
-            "text-halign": "center",
+            "text-halign": "left",
         },
     },
     {

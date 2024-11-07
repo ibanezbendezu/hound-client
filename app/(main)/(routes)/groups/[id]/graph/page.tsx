@@ -22,6 +22,7 @@ export default function GraphPage({params}: { params: any }) {
                 ...cytoscapeFormat.nodes.map(node => ({data: node.data})),
                 ...cytoscapeFormat.edges.map(edge => ({data: edge.data}))
             ];
+            console.log(elements);
             setData(elements);
             setLoading(false);
         };

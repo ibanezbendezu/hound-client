@@ -24,7 +24,7 @@ export const GroupInfoPopover = ({threshold} : {threshold: number}) => {
                 </div>
                 <div className="p-2">
                     <p className="text-sm font-semibold pb-1 underline">
-                        {"Clases"}
+                        {"Capas"}
                     </p>
                     <p className="text-xs font-normal text-muted-foreground">
                         <span className="text-sm font-semibold text-muted-foreground">

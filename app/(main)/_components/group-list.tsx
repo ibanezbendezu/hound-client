@@ -25,7 +25,7 @@ export const GroupList = () => {
             setGroups(sortedGroups);
         }
         fetchData();
-    }, []);
+    }, [groups]);
 
     const onRedirect = (groupId: string) => {
         router.push(`/groups/${groupId}`);

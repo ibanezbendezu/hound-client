@@ -38,6 +38,18 @@ export function groupCytoscape(data: any) {
     const edges: Edge[] = [];
 
     const colorScale = scaleLinear<string>().domain([0, 100]).range(["#2E9335", "#B82318"]);
+    const maxRepoFontSize = 35;
+    const minRepoFontSize = 25;
+    const layerFontSize = 20;
+
+    const minFontSize = 5;
+    const maxFontSize = 15;
+    const minWidth = 60;
+    const maxWidth = 200;
+    const minHeight = 50;
+    const maxHeight = 200;
+
+    const largestRepo = data.repositories.reduce((acc: number, repo: any) => Math.max(acc, repo.layers.reduce((acc: number, layer: any) => acc + layer.files.length, 0)), 0);
 
     data.repositories.forEach((repo: any) => {
         const repoId = `repo-${repo.sha}`;
@@ -46,6 +58,7 @@ export function groupCytoscape(data: any) {
                 id: repoId,
                 label: repo.owner + "/" + repo.name,
                 type: 'repository',
+                fontSize: Math.min(Math.max(minRepoFontSize, maxRepoFontSize * (repo.layers.reduce((acc: number, layer: any) => acc + layer.files.length, 0) / largestRepo)), maxRepoFontSize)
             }
         });
     
@@ -57,7 +70,8 @@ export function groupCytoscape(data: any) {
                     label: layer.name,
                     parent: repoId,
                     type: 'layer',
-                    layer: layer.layer
+                    layer: layer.layer,
+                    fontSize: layerFontSize
                 }
             });
     
@@ -66,12 +80,6 @@ export function groupCytoscape(data: any) {
                 const fileName = file.filepath.split('/').pop();
 
                 const nameLength = fileName.length;
-                const minFontSize = 5;
-                const maxFontSize = 15;
-                const minWidth = 60;
-                const maxWidth = 200;
-                const minHeight = 50;
-                const maxHeight = 200;
 
                 const width = Math.min(Math.max(minWidth, maxWidth * (file.lineCount / 100) + nameLength), maxWidth);
                 const height = Math.min(Math.max(minHeight, maxHeight * (file.lineCount / 100)), maxHeight);

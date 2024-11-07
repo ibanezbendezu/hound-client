@@ -134,6 +134,16 @@ export const GroupB: React.FC<GroupProps> = ({data, groupId}) => {
                     cy.on("click", "node[type='file']", (e: any) => {
                         handleFile(e.target.data()).then(r => console.log(r));
                     });
+                    cy.nodes().on("expandcollapse.aftercollapse", function(event) {
+                        let node = event.target;
+                        node.style("font-size", "10px");
+                        node.style("width", "label");
+                    });
+                    cy.nodes().on("expandcollapse.afterexpand", function(event) {
+                        let node = event.target;
+                        node.style("font-size", node.data("fontSize"));
+                        node.style("width", node.data("width"));
+                    });
                 }}
                 layout={config.layout}
                 stylesheet={graphStyles2}

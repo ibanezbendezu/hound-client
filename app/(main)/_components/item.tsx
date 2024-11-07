@@ -35,9 +35,11 @@ export const Item = ({
 
     const onDelete = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         event.stopPropagation();
-        if (id !== undefined && typeof id === 'number') {
-            removeGroupFromStore({sha: id.toString()});
-            groupDeleteRequestBySha(id.toString());
+        if (id !== undefined && typeof id === 'string') {
+            removeGroupFromStore({sha: id});
+            groupDeleteRequestBySha(id).then(r => r);
+        } else {
+            console.error('Invalid group id:', id);
         }
     }
 
