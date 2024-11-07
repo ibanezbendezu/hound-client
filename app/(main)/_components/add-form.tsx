@@ -20,9 +20,10 @@ import {useForm} from 'react-hook-form';
 import * as z from 'zod';
 import {useAuthStore} from '@/store/auth';
 import useCart from '@/store/repos';
-import {groupUpdateRequestBySha} from '@/api/server-data';
+import {groupSummaryRequest, groupUpdateRequestBySha} from '@/api/server-data';
 import {formatDateTime} from '@/lib/utils';
 import { CustomAlert } from './custom-alert';
+import { LoadingModal } from '@/components/modals/loading-modal';
 
 const formSchema = z.object({
     grupo: z.number(),
@@ -45,6 +46,9 @@ export default function AddForm({setIsOpen, cartCollapse, setIsLoading}: Readonl
     const [reposToAdd, setReposToAdd] = useState<any[]>([]);
     const [groupSha, setGroupSha] = useState('');
     const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(true);
+
+    const [loading, setLoading] = useState(false);
+    const [percentage, setPercentage] = useState(0);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -96,6 +100,26 @@ export default function AddForm({setIsOpen, cartCollapse, setIsLoading}: Readonl
         }
     }
 
+    const recursiveFactorial = (n: number): number => {
+        if (n === 0) {
+            return 1;
+        }
+        return n * recursiveFactorial(n - 1);
+    }
+
+    const combinations = (n: number) => {
+        // n over k combinations
+        const k = 2;
+        const nMinusK = n - k;
+        const nFactorial = recursiveFactorial(n);
+        const kFactorial = recursiveFactorial(k);
+        const nMinusKFactorial = recursiveFactorial(nMinusK);
+        const nChooseK = nFactorial / (kFactorial * nMinusKFactorial);
+
+        // 6 seconds per request
+        return nChooseK;
+    }
+
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         if (values.grupo === 0) {
             setShowAlert(true);
@@ -104,14 +128,49 @@ export default function AddForm({setIsOpen, cartCollapse, setIsLoading}: Readonl
         }
         
         try {
-            setIsLoading(true);
+            /* setIsLoading(true);
             const username = profile.username;
             const data = await groupUpdateRequestBySha(groupSha, reposToAdd, username);
             updateGroupInStore({id: values.grupo, updatedGroup: {...data.data, repositories: reposToAdd}});
             emptyCart();
             setIsOpen(false);
             cartCollapse();
-            router.push(`/groups/${data.data.sha}`);
+            router.push(`/groups/${data.data.sha}`); */
+
+            setIsLoading(true);
+            setLoading(true);
+            const combs = combinations(reposToAdd.length);
+        
+            setPercentage(0);
+            setIsOpen(true);
+
+            const username = profile.username;
+
+            const group = await groupUpdateRequestBySha(groupSha, reposToAdd, username);
+            const pId = setInterval(() => {
+                if(percentage >= 99)
+                    clearInterval(pId);
+                setPercentage(prev => prev + 1);
+            }, 6 * combs * 10);
+
+            const iId = setInterval(async () => {
+                const summary = await groupSummaryRequest(group.data.sha);
+                if (summary.data.comparissonsCompleted === combs) {
+                    clearInterval(pId);
+                    clearInterval(iId);
+
+                    updateGroupInStore({ sha: group.data.sha, ...summary.data });
+                    emptyCart();
+
+                    setIsOpen(false);
+                    cartCollapse();
+                    setLoading(false);
+                    setPercentage(100);
+                    
+                    router.push(`/groups/${group.data.sha}`);
+                }
+            }, 6000);
+
         } catch (error) {
             console.log(error);
         }
@@ -123,58 +182,61 @@ export default function AddForm({setIsOpen, cartCollapse, setIsLoading}: Readonl
     }));
 
     return (
-        <Form {...form}>
-            <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="flex flex-col space-y-4 sm:px-0 px-4"
-            >
-                {showAlert && (
-                    <CustomAlert option={alertType}/>
-                )}
-                <FormField
-                    control={form.control}
-                    name="grupo"
-                    render={({field: {onChange, value}}) => (
-                        <FormItem>
-                            <FormLabel>Comparaciones</FormLabel>
-                            <Select
-                                options={options}
-                                styles={customStyles}
-                                placeholder="Selecciona un grupo..."
-                                value={options.find((option) => option.value === value)}
-                                onChange={(option) => {
-                                    onChange(option?.value);
-                                    setShowAlert(false);
-                                    onValidate({grupo: option?.value});
-                                }}
-                            />
-                            <FormDescription>
-                                Escoge el grupo al que quieres agregar repositorios
-                            </FormDescription>
-                            <FormMessage/>
-                        </FormItem>
+        <>
+            <LoadingModal isOpen={loading} percentage={percentage} />
+            <Form {...form}>
+                <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="flex flex-col space-y-4 sm:px-0 px-4"
+                >
+                    {showAlert && (
+                        <CustomAlert option={alertType}/>
                     )}
-                />
+                    <FormField
+                        control={form.control}
+                        name="grupo"
+                        render={({field: {onChange, value}}) => (
+                            <FormItem>
+                                <FormLabel>Comparaciones</FormLabel>
+                                <Select
+                                    options={options}
+                                    styles={customStyles}
+                                    placeholder="Selecciona un grupo..."
+                                    value={options.find((option) => option.value === value)}
+                                    onChange={(option) => {
+                                        onChange(option?.value);
+                                        setShowAlert(false);
+                                        onValidate({grupo: option?.value});
+                                    }}
+                                />
+                                <FormDescription>
+                                    Escoge el grupo al que quieres agregar repositorios
+                                </FormDescription>
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                    />
 
-                <div className="flex w-full sm:justify-end mt-4">
-                    <Button
-                        type="submit"
-                        disabled={isLoading || !isButtonDisabled}
-                        className="w-full sm:w-auto"
-                    >
-                        <>
-                            {isLoading ? (
-                                <>
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
-                                    Agregando...
-                                </>
-                            ) : (
-                                'Confirmar'
-                            )}
-                        </>
-                    </Button>
-                </div>
-            </form>
-        </Form>
+                    <div className="flex w-full sm:justify-end mt-4">
+                        <Button
+                            type="submit"
+                            disabled={isLoading || !isButtonDisabled}
+                            className="w-full sm:w-auto"
+                        >
+                            <>
+                                {isLoading ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
+                                        Agregando...
+                                    </>
+                                ) : (
+                                    'Confirmar'
+                                )}
+                            </>
+                        </Button>
+                    </div>
+                </form>
+            </Form>
+        </>
     );
 }

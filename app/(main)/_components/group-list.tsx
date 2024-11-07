@@ -24,8 +24,8 @@ export const GroupList = () => {
             const sortedGroups = groups.data.sort((b:any, a:any) => new Date(b.groupDate).getTime() - new Date(a.groupDate).getTime());
             setGroups(sortedGroups);
         }
-        fetchData().then(r => console.log(r));
-    }, [user.username, groups]);
+        fetchData();
+    }, []);
 
     const onRedirect = (groupId: string) => {
         router.push(`/groups/${groupId}`);
@@ -42,6 +42,7 @@ export const GroupList = () => {
             {groups.map((group) => (
                 <div key={group.id}>
                     <Item
+                        id={group.sha}
                         onClick={() => onRedirect(group.sha)}
                         isGroup={group.numberOfRepos}
                         label={formatDateTime(group.groupDate)}

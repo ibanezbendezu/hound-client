@@ -1,9 +1,14 @@
 "use client";
 
+import { groupDataRequestBySha, groupDeleteRequestBySha } from "@/api/server-data";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {Skeleton} from "@/components/ui/skeleton";
 import {cn} from "@/lib/utils";
+import useStore from "@/store/groups";
 import {
     LucideIcon,
+    MoreHorizontal,
+    Trash,
 } from "lucide-react";
 
 interface ItemProps {
@@ -17,14 +22,24 @@ interface ItemProps {
 }
 
 export const Item = ({
-                         id,
-                         active,
-                         isSearched,
-                         isGroup,
-                         label,
-                         onClick,
-                         icon: Icon,
-                     }: ItemProps) => {
+    id,
+    active,
+    isSearched,
+    isGroup,
+    label,
+    onClick,
+    icon: Icon,
+}: ItemProps) => {
+
+    const {store, removeGroupFromStore} = useStore(state => state);
+
+    const onDelete = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        event.stopPropagation();
+        if (id !== undefined && typeof id === 'number') {
+            removeGroupFromStore({sha: id.toString()});
+            groupDeleteRequestBySha(id.toString());
+        }
+    }
 
     return (
         <div
@@ -47,10 +62,36 @@ export const Item = ({
                 </kbd>
             )}
             {isGroup && (
-                <kbd
-                    className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 whitespace-nowrap">
-                    <span className="text-xs">Repos: {isGroup} </span>
-                </kbd>
+                <>
+                    <kbd
+                        className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 whitespace-nowrap">
+                        <span className="text-xs">Rs: {isGroup} </span>
+                    </kbd>
+
+                    <div className="ml-auto flex items-center gap-x-2">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                                <div
+                                    role="button"
+                                    className="opacity-0 group-hover:opacity-100 h-full ml-auto rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600"
+                                >
+                                    <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+                                </div>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent
+                                className="w-60"
+                                align="start"
+                                side="right"
+                                forceMount
+                            >
+                                <DropdownMenuItem onClick={onDelete}>
+                                    <Trash className="h-4 w-4 mr-2" />
+                                    Delete
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+                </>
             )}
         </div>
     );

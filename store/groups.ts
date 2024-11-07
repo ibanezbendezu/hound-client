@@ -3,6 +3,7 @@ import {persist} from "zustand/middleware";
 
 type StoreItem = {
     id: number;
+    sha: string;
     groupDate: string;
     comparisons: Array<any>;
     numberOfRepos: number;
@@ -17,9 +18,9 @@ type State = {
 type Actions = {
     setGroup: (params: { newGroup: any }) => void,
     addGroupToStore: (params: { newGroup: any }) => void,
-    removeGroupFromStore: (params: { itemIndex: number }) => void,
+    removeGroupFromStore: (params: { sha: string }) => void,
     emptyStore: () => void,
-    updateGroupInStore: (params: { id: number, updatedGroup: any }) => void
+    updateGroupInStore: (params: { sha: string, updatedGroup: any }) => void
 }
 
 const useStore = create(persist<State & Actions>(
@@ -47,11 +48,9 @@ const useStore = create(persist<State & Actions>(
             })
         },
         removeGroupFromStore: (params) => {
-            const {itemIndex} = params
+            const {sha} = params
             set((state) => {
-                const newStore = state.store.filter((element, elementIndex) => {
-                    return elementIndex !== itemIndex
-                })
+                const newStore = state.store.filter((item) => item.sha !== sha)
                 return {
                     ...state,
                     store: newStore
@@ -67,8 +66,9 @@ const useStore = create(persist<State & Actions>(
                 }
             })
         },
-        updateGroupInStore: ({id, updatedGroup}) => set((state) => ({
-            store: state.store.map((item) => item.id === id ? {...item, ...updatedGroup} : item)
+        updateGroupInStore: ({sha, updatedGroup}) =>
+            set((state) => ({
+            store: state.store.map((item) => item.sha === sha ? {...item, ...updatedGroup} : item)
         })),
     }), {
         name: 'store'
