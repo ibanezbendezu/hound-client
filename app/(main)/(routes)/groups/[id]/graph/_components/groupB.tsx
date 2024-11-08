@@ -10,7 +10,7 @@ import undoRedo from "cytoscape-undo-redo";
 import expandCollapse from 'cytoscape-expand-collapse';
 import popper from 'cytoscape-popper';
 import navigator from "cytoscape-navigator";
-import {graphStyles2} from './styleB';
+import {graphStyles2, graphStylesLight} from './styleB';
 import "cytoscape-navigator/cytoscape.js-navigator.css";
 import "./style.css";
 
@@ -20,6 +20,8 @@ import {PairDialog} from '@/app/(main)/(routes)/groups/[id]/graph/_components/pa
 import {pairsByGroupShaDataRequest, pairByIdDataRequest} from '@/api/server-data';
 import {fileCytoscape} from './utils';
 import {Legend} from './legends';
+
+import {useTheme} from "next-themes";
 
 //expandCollapse(cytoscape, jquery);
 cytoscape.use(dagre);
@@ -44,6 +46,8 @@ export const GroupB: React.FC<GroupProps> = ({data, groupId}) => {
     const [file, setFile] = useState<any>(null);
     const [pair, setPair] = useState<any>(null);
     const [graphData, setGraphData] = useState<any>(null);
+
+    const {theme} = useTheme();
 
     const handlePair = async (e: any) => {
         const pairId = parseInt(e.id.split("-")[1], 10);
@@ -146,7 +150,7 @@ export const GroupB: React.FC<GroupProps> = ({data, groupId}) => {
                     });
                 }}
                 layout={config.layout}
-                stylesheet={graphStyles2}
+                stylesheet={theme === "dark" ? graphStyles2 : graphStylesLight}
                 elements={data}
                 wheelSensitivity={0.1}
                 zoomingEnabled={true}

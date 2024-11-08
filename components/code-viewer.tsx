@@ -25,7 +25,6 @@ export const CodeViewer = ({
 
     const [formattedCode, setFormattedCode] = useState("");
     const { theme } = useTheme();
-    const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
     useEffect(() => {
         setFormattedCode(code);
@@ -64,7 +63,7 @@ export const CodeViewer = ({
         <SyntaxHighlighter
             language={language}
             style={
-                (theme === "dark" || isDarkMode ) ? stackoverflowDark : stackoverflowLight
+                (theme === "dark" || theme === "dark") ? stackoverflowDark : stackoverflowLight
             }
             showLineNumbers={true}
             wrapLongLines={true}
@@ -115,8 +114,8 @@ export const CodeViewer = ({
 
 CodeViewer.Void = function CodeViewerVoid() {
     const { theme } = useTheme();
-    const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    return <div className="w-full h-8 rounded-md text-center" style={{backgroundColor: (theme === "dark" || isDarkMode) ? "#1c1b1b" : "#F6F6F6"}}></div>;
+    return <div className="w-full h-8 rounded-md text-center"
+                style={{backgroundColor: (theme === "dark" || theme === "system") ? "#1c1b1b" : "#F6F6F6"}}></div>;
 }
 CodeViewer.Skeleton = function CodeViewerSkeleton() {
     return <Skeleton className="w-full h-48"/>;

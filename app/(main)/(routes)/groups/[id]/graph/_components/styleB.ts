@@ -213,6 +213,121 @@ export const graphStyles2 = [
     }
 ] as any;
 
+export const graphStylesLight = [
+    {
+        selector: "node",
+        style: {
+            label: "data(label)",
+            color: "#000",
+            width: "data(width)",
+            height: "data(height)",
+            shape: "roundrectangle",
+
+            "text-valign": "center",
+            "text-halign": "center",
+            "font-size": "data(fontSize)",
+            "font-family": "monospace",
+
+            /* "text-background-color": "#fff",
+            "text-background-opacity": 1,
+            "text-background-padding": "3px",
+            "text-background-shape": "roundrectangle", */
+        },
+    },
+    {
+        selector: "node:parent",
+        style: {
+            "text-valign": "top",
+            "text-halign": "center",
+        },
+    },
+    {
+        selector: "node[type = 'repository']",
+        style: {
+            "font-weight": "bold",
+            "background-color": "#f3f4f6",
+            "background-opacity": 0.9,
+            "border-width": "0px",
+        },
+    },
+    {
+        selector: "node[layer='Service'][type='layer']",
+        style: {
+            "background-color": "#5b7792",
+            "background-opacity": 0.6,
+            "border-width": "0px",
+
+            "text-background-color": "#5b7792",
+            "text-background-opacity": 0.6,
+            "text-background-padding": "5px",
+            "text-background-shape": "round-rectangle",
+        },
+    },
+    {
+        selector: "node[layer='Controller'][type='layer']",
+        style: {
+            "background-color": "#7b8b9a",
+            "background-opacity": 0.6,
+            "border-width": "0px",
+
+            "text-background-color": "#7b8b9a",
+            "text-background-opacity": 0.6,
+            "text-background-padding": "5px",
+            "text-background-shape": "round-rectangle",
+        },
+    },
+    {
+        selector: "node[layer='Repository'][type='layer']",
+        style: {
+            "background-color": "#85857e",
+            "background-opacity": 0.6,
+            "border-width": "0px",
+
+            "text-background-color": "#85857e",
+            "text-background-opacity": 0.6,
+            "text-background-padding": "5px",
+            "text-background-shape": "round-rectangle",
+        },
+    },
+    {
+        selector: "node[type='file']",
+        style: {
+            "background-color": "#f3f4f6",
+            "background-opacity": 0.9,
+            "border-width": "0px",
+        },
+    },
+    {
+        selector: "edge",
+        style: {
+            width: "data(width)",
+            color: "#fff",
+            label: "data(label)",
+            "line-color": "data(color)",
+            "line-opacity": 0.8,
+            "text-valign": "bottom",
+            "font-size": "5px",
+            "curve-style": "bezier",
+            "source-endpoint": "outside-to-node",
+            "target-endpoint": "outside-to-node",
+            "text-rotation": "autorotate",
+
+            "text-background-color": "data(color)",
+            "text-background-opacity": 1,
+            "text-background-padding": "2px",
+            "text-background-shape": "roundrectangle",
+        },
+    },
+    {
+        selector: "edge:selected",
+        style: {
+            "line-color": "#000",
+            "target-arrow-color": "#000",
+            "text-background-color": "data(color)",
+        },
+    }
+] as any;
+
 export const fileGraphStyles = [
     {
         selector: "node",
