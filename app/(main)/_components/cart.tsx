@@ -172,7 +172,7 @@ export const Cart = () => {
                     </div>
 
                     <div className="flex justify-center items-center gap-2 px-4 pt-1 pb-4">
-                        <ConfirmModal onConfirm={() => handleRepos()}>
+                        <ConfirmModal onConfirm={() => handleRepos()} message={"Se compararán todos los repositorios seleccionados."}>
                             <div className="flex justify-center w-full"
                                  style={{pointerEvents: cartItems.length <= 1 ? 'none' : 'auto'}}>
                                 <TooltipHint text="Comparar" side="bottom" disabled={cartItems.length <= 1}>

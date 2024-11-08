@@ -10,6 +10,8 @@ import {
     MoreHorizontal,
     Trash,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface ItemProps {
     id?: number | string;
@@ -31,13 +33,19 @@ export const Item = ({
     icon: Icon,
 }: ItemProps) => {
 
-    const {store, removeGroupFromStore} = useStore(state => state);
+    const {removeGroupFromStore} = useStore(state => state);
+    const router = useRouter();
 
     const onDelete = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         event.stopPropagation();
         if (id !== undefined && typeof id === 'string') {
             removeGroupFromStore({sha: id});
-            groupDeleteRequestBySha(id).then(r => r);
+            const promise = groupDeleteRequestBySha(id).then(() => router.push("/home"));
+            toast.promise(promise, {
+                loading: "Eliminando grupo...",
+                success: "Grupo eliminado!",
+                error: "Fallo al eliminar grupo.",
+            });
         } else {
             console.error('Invalid group id:', id);
         }

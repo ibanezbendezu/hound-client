@@ -15,9 +15,10 @@ import {
 interface ConfirmModalProps {
     children: React.ReactNode;
     onConfirm: () => void;
+    message?: string;
 }
 
-export const ConfirmModal = ({children, onConfirm}: ConfirmModalProps) => {
+export const ConfirmModal = ({children, onConfirm, message}: ConfirmModalProps) => {
     const handleConfirm = (
         event: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ) => {
@@ -34,7 +35,7 @@ export const ConfirmModal = ({children, onConfirm}: ConfirmModalProps) => {
                 <AlertDialogHeader>
                     <AlertDialogTitle>¿Estas seguro?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        Se compararán todos los repositorios seleccionados.
+                        {message}
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

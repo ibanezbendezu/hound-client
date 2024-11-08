@@ -39,7 +39,7 @@ export function groupCytoscape(data: any) {
 
     const colorScale = scaleLinear<string>().domain([0, 100]).range(["#2E9335", "#B82318"]);
     const maxRepoFontSize = 35;
-    const minRepoFontSize = 25;
+    const minRepoFontSize = 27;
     const layerFontSize = 20;
 
     const minFontSize = 5;
