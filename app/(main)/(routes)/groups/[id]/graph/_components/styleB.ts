@@ -353,14 +353,13 @@ export const fileGraphStyles = [
         selector: "node:parent",
         style: {
             "text-valign": "top",
-            "text-halign": "left",
+            "text-halign": "center",
         },
     },
     {
         selector: "node[type = 'repository']",
         style: {
             "font-size": "30px",
-            "font-weight": "bold",
             "background-color": "#343434",
             "background-opacity": 0.9,
             "border-width": "0px",
@@ -417,6 +416,99 @@ export const fileGraphStyles = [
         style: {
             "line-color": "#fff",
             "target-arrow-color": "#fff",
+            "text-background-color": "data(color)",
+        },
+    }
+] as any;
+
+export const fileGraphStylesLight = [
+    {
+        selector: "node",
+        style: {
+            label: "data(label)",
+            color: "#000",
+            width: "data(width)",
+            height: "data(height)",
+            shape: "roundrectangle",
+
+            "text-valign": "center",
+            "text-halign": "center",
+            "font-size": "data(fontSize)",
+            "font-family": "monospace",
+
+            //"text-background-color": "#fff",
+            //"text-background-opacity": 1,
+            //"text-background-padding": "3px",
+            //"text-background-shape": "roundrectangle",
+        },
+    },
+    {
+        selector: "node:parent",
+        style: {
+            "text-valign": "top",
+            "text-halign": "center",
+        },
+    },
+    {
+        selector: "node[type = 'repository']",
+        style: {
+            "font-size": "30px",
+            "background-color": "#f3f4f6",
+            "background-opacity": 0.9,
+            "border-width": "0px",
+            "overlay-color": "#f3f4f6",
+        },
+    },
+    {
+        selector: "node[type='file']",
+        style: {
+            width: "data(width)",
+            height: "data(height)",
+            "font-size": "data(fontSize)",
+            "background-color": "#e1e2e3",
+            "background-opacity": 0.9,
+            "border-width": "0px",
+        },
+    },
+    {
+        selector: "node[type='file'][class='source']",
+        style: {
+            shape: "roundrectangle",
+            "font-weight": "bold",
+            "text-wrap": "wrap",
+            "background-color": "#e1e2e3",
+            "background-opacity": 0.9,
+            "border-width": "1px",
+            "border-color": "#615B5B",
+        },
+    },
+    {
+        selector: "edge",
+        style: {
+            width: "data(width)",
+            color: "#fff",
+            label: "data(similarity)",
+            "line-color": "data(color)",
+            "line-opacity": 0.8,
+            "text-valign": "bottom",
+            "font-weight": "bold",
+            "font-size": "4px",
+            "curve-style": "bezier",
+            "source-endpoint": "outside-to-node",
+            "target-endpoint": "outside-to-node",
+            "text-rotation": "autorotate",
+
+            "text-background-color": "data(color)",
+            "text-background-opacity": 1,
+            "text-background-padding": "2px",
+            "text-background-shape": "roundrectangle",
+        },
+    },
+    {
+        selector: "edge:selected",
+        style: {
+            "line-color": "#000",
+            "target-arrow-color": "#000",
             "text-background-color": "data(color)",
         },
     }

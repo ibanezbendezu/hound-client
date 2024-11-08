@@ -1,7 +1,7 @@
 "use client";
 
 import {Heroes} from "../_components/heroes";
-import {ArrowUpLeft, SearchCode, ArrowUp} from "lucide-react";
+import {ArrowUpLeft, SearchCode, ArrowUp, CircleFadingPlus} from "lucide-react";
 import React from "react";
 import {useAuthStore} from "@/store/auth";
 
@@ -29,6 +29,12 @@ const Home = () => {
                     O usa el comando <code className="text-primary">Ctrl+k</code> en el teclado.
                 </p>
                 <SearchCode className="h-5 w-5 text-current"/>
+            </div>
+            <div className="py-2 flex items-center gap-2">
+                <p className="text-sm font-normal text-muted-foreground">
+                    También puedes ingresar tu lista de repositorios (URLs) para ser seleccionados.
+                </p>
+                <CircleFadingPlus className="h-5 w-5 text-current"/>
             </div>
             <div className="py-10 flex items-center gap-2 justify-end">
                 <p className="text-sm font-normal text-muted-foreground">

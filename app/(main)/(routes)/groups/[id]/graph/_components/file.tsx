@@ -6,13 +6,16 @@ import CytoscapeComponent from "react-cytoscapejs";
 import dagre from "cytoscape-dagre";
 import fcose from "cytoscape-fcose";
 import expandCollapse from 'cytoscape-expand-collapse';
-import {fileGraphStyles} from './style';
+import {fileGraphStyles, fileGraphStylesLight} from './styleB';
 import "cytoscape-navigator/cytoscape.js-navigator.css";
 import "./style.css";
 
 import {PairDialog} from '@/app/(main)/(routes)/groups/[id]/graph/_components/pair-dialog';
 
 import {pairByIdDataRequest} from '@/api/server-data';
+
+import {useTheme} from "next-themes";
+
 
 cytoscape.use(dagre);
 cytoscape.use(fcose);
@@ -25,6 +28,8 @@ type Props = {
 export const File: React.FC<Props> = ({data}) => {
     const [isPairOpen, setIsPairOpen] = useState(false);
     const [pair, setPair] = useState<any>(null);
+
+    const {theme} = useTheme();
 
     const handlePair = async (e: any) => {
         const pairId = parseInt(e.id.split("-")[1], 10);
@@ -85,7 +90,7 @@ export const File: React.FC<Props> = ({data}) => {
                 }}
                 layout={config.layout}
                 styleEnabled={true}
-                stylesheet={fileGraphStyles}
+                stylesheet={theme === "dark" ? fileGraphStyles : fileGraphStylesLight}
                 elements={data}
                 wheelSensitivity={0.1}
                 zoomingEnabled={true}
