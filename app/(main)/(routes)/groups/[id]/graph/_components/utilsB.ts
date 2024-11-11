@@ -12,6 +12,7 @@ export function groupCytoscape(data: any, theme: string) {
         height?: number;
         fontSize?: number;
         bgColor?: string;
+        show?: boolean;
     }
 
     interface Node {
@@ -98,7 +99,8 @@ export function groupCytoscape(data: any, theme: string) {
                         width: width,
                         height: height,
                         fontSize: fontSize,
-                        bgColor: ""
+                        bgColor: "",
+                        show: true
                     }
                 });
     
@@ -118,7 +120,7 @@ export function groupCytoscape(data: any, theme: string) {
                                     target: targetFileId,
                                     sourceName: file.name,
                                     targetName: pair.filepath.split('/').pop(),
-                                    similarity: Math.round(pair.similarity * 100),
+                                    similarity: pair.similarity,
                                     label: "S:" + Math.round(pair.similarity * 100) + '% | I: ' + Math.round(pair.normalizedImpact * 100) + '%',
                                     color: colorScale(pair.similarity * 100),
                                     impact: pair.normalizedImpact,
@@ -261,7 +263,7 @@ export function fileCytoscape(data: any, theme: string) {
 
                     sourceName: sourceName,
                     targetName: fileName,
-                    similarity: Math.round(similarity),
+                    similarity: similarity,
                     label: "S:" + Math.round(similarity) + '% | I: ' + Math.round(pair.normalizedImpact * 100) + '%',
                     color: colorScale(similarity),
                     impact: pair.normalizedImpact,

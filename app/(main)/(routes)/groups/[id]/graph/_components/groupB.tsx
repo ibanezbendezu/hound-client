@@ -190,6 +190,23 @@ export const GroupB: React.FC<GroupProps> = ({data, groupId, threshold}) => {
                             tgt.style('background-color', tgt.data('bgColor'));
                         }
                     });
+
+                    cy.edges().forEach((edge: any) => {
+                        const showEdge = edge.data('similarity') >= value;
+                        edge.data('show', showEdge);
+                        showEdge ? edge.show() : edge.hide();
+
+                        const src = edge.source();
+                        const tgt = edge.target();
+
+                        if (src.data('type') === 'file' && tgt.data('type') === 'file') {
+                            const showSrc = src.connectedEdges().some((edge: any) => edge.data('show'));
+                            const showTgt = tgt.connectedEdges().some((edge: any) => edge.data('show'));
+
+                            showSrc ? src.show() : src.hide();
+                            showTgt ? tgt.show() : tgt.hide();
+                        }
+                    });
                 }}
                 layout={config.layout}
                 stylesheet={theme === "dark" ? graphStyles2 : graphStylesLight}
