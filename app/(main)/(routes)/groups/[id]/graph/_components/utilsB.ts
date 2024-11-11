@@ -11,6 +11,7 @@ export function groupCytoscape(data: any, theme: string) {
         width?: number;
         height?: number;
         fontSize?: number;
+        bgColor?: string;
     }
 
     interface Node {
@@ -97,6 +98,7 @@ export function groupCytoscape(data: any, theme: string) {
                         width: width,
                         height: height,
                         fontSize: fontSize,
+                        bgColor: ""
                     }
                 });
     
@@ -135,7 +137,7 @@ export function groupCytoscape(data: any, theme: string) {
     return {nodes, edges};
 }
 
-export function fileCytoscape(data: any) {
+export function fileCytoscape(data: any, theme: string) {
     console.log("fileCytoscape", data);
     interface NodeData {
         id: string;
@@ -148,6 +150,7 @@ export function fileCytoscape(data: any) {
         width?: number;
         height?: number;
         fontSize?: number;
+        bgColor?: string;
     }
 
     interface Node {
@@ -175,7 +178,10 @@ export function fileCytoscape(data: any) {
     const nodes: Node[] = [];
     const edges: Edge[] = [];
 
-    const colorScale = scaleLinear<string>().domain([0, 100]).range(["#2E9335", "#B82318"]);
+    const colorScale = theme === 'dark' ? scaleLinear<string>().domain([0, 100]).range(["#2E9335", "#B82318"]) : scaleLinear<string>().domain([0, 100]).range(["#62bc4e", "#cd4843"]);
+
+    const maxRepoFontSize = 35;
+    const minRepoFontSize = 27;
 
     const file = data.file;
     const sourceId = `file-${data.file.id}`;
@@ -192,7 +198,9 @@ export function fileCytoscape(data: any) {
     const width = Math.min(Math.max(minWidth, maxWidth * (file.lineCount / 100) + sourceNameLength), maxWidth);
     const height = Math.min(Math.max(minHeight, maxHeight * (file.lineCount / 100)), maxHeight);
     const fontSize = Math.min(Math.max(minFontSize, maxFontSize * (file.lineCount / 100)), maxFontSize);
-    
+
+    const largestRepo = data.repositories.reduce((acc: number, repo: any) => Math.max(acc, repo.pairs.length), 0);
+
     nodes.push({
         data: {
             id: sourceId,
@@ -202,7 +210,8 @@ export function fileCytoscape(data: any) {
             sha: file.sha,
             width: width,
             height: height,
-            fontSize: fontSize
+            fontSize: fontSize,
+            bgColor: ""
         }
     });
 
@@ -213,6 +222,7 @@ export function fileCytoscape(data: any) {
                 id: repoId,
                 label: repo.name,
                 type: 'repository',
+                fontSize: Math.min(Math.max(minRepoFontSize, maxRepoFontSize * (repo.pairs.length / largestRepo)), maxRepoFontSize)
             }
         });
 
@@ -225,7 +235,7 @@ export function fileCytoscape(data: any) {
             const width = Math.min(Math.max(minWidth, maxWidth * (pair.file.lineCount / 100) + nameLength), maxWidth);
             const height = Math.min(Math.max(minHeight, maxHeight * (pair.file.lineCount / 100)), maxHeight);
             const fontSize = Math.min(Math.max(minFontSize, maxFontSize * (pair.file.lineCount / 100)), maxFontSize);
-            
+
             nodes.push({
                 data: {
                     id: fileId,
@@ -237,7 +247,8 @@ export function fileCytoscape(data: any) {
                     sha: pair.file.sha,
                     width: width,
                     height: height,
-                    fontSize: fontSize
+                    fontSize: fontSize,
+                    bgColor: ""
                 }
             });
 
@@ -254,7 +265,7 @@ export function fileCytoscape(data: any) {
                     label: "S:" + Math.round(similarity) + '% | I: ' + Math.round(pair.normalizedImpact * 100) + '%',
                     color: colorScale(similarity),
                     impact: pair.normalizedImpact,
-                    width: (Math.pow(pair.normalizedImpact, 6) * 4) + 1.5, 
+                    width: (Math.pow(pair.normalizedImpact, 6) * 4) + 1.5,
                 },
             });
 

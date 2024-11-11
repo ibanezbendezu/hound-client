@@ -1,3 +1,5 @@
+export const hover = { 'background-color': 'data(color)' };
+
 export const graphStyles = [
     {
         selector: "node",
@@ -359,7 +361,7 @@ export const fileGraphStyles = [
     {
         selector: "node[type = 'repository']",
         style: {
-            "font-size": "30px",
+            "font-weight": "bold",
             "background-color": "#343434",
             "background-opacity": 0.9,
             "border-width": "0px",
@@ -385,8 +387,8 @@ export const fileGraphStyles = [
             "text-wrap": "wrap",
             "background-color": "#444444",
             "background-opacity": 0.9,
-            "border-width": "1px",
-            "border-color": "#615B5B",
+            "border-width": "3px",
+            "border-color": "#b8b8b8",
         },
     },
     {
@@ -452,7 +454,7 @@ export const fileGraphStylesLight = [
     {
         selector: "node[type = 'repository']",
         style: {
-            "font-size": "30px",
+            "font-weight": "bold",
             "background-color": "#f3f4f6",
             "background-opacity": 0.9,
             "border-width": "0px",
@@ -478,7 +480,7 @@ export const fileGraphStylesLight = [
             "text-wrap": "wrap",
             "background-color": "#e1e2e3",
             "background-opacity": 0.9,
-            "border-width": "1px",
+            "border-width": "3px",
             "border-color": "#615B5B",
         },
     },

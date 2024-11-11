@@ -14,11 +14,14 @@ import {graphStyles2, graphStylesLight} from './styleB';
 import "cytoscape-navigator/cytoscape.js-navigator.css";
 import "./style.css";
 
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css';
+
 import {FileDialog} from '@/app/(main)/(routes)/groups/[id]/graph/_components/file-dialog';
 import {PairDialog} from '@/app/(main)/(routes)/groups/[id]/graph/_components/pair-dialog';
 
 import {pairsByGroupShaDataRequest, pairByIdDataRequest} from '@/api/server-data';
-import {fileCytoscape} from './utils';
+import {fileCytoscape} from './utilsB';
 import {Legend} from './legends';
 
 import {useTheme} from "next-themes";
@@ -31,6 +34,7 @@ cytoscape.use(undoRedo);
 cytoscape.use(expandCollapse);
 cytoscape.use(popper);
 cytoscape.use(navigator);
+cytoscape.use(popper);
 
 type GroupProps = {
     data: any;
@@ -63,7 +67,7 @@ export const GroupB: React.FC<GroupProps> = ({data, groupId}) => {
         const res = await pairsByGroupShaDataRequest(groupId, fileSha);
         const fileData = res.data.file;
 
-        const cytoscapeFormat = fileCytoscape(res.data)
+        const cytoscapeFormat = fileCytoscape(res.data, theme || '');
         const elements = [
             ...cytoscapeFormat.nodes.map(node => ({data: node.data})),
             ...cytoscapeFormat.edges.map(edge => ({data: edge.data}))
@@ -147,6 +151,41 @@ export const GroupB: React.FC<GroupProps> = ({data, groupId}) => {
                         let node = event.target;
                         node.style("font-size", node.data("fontSize"));
                         node.style("width", node.data("width"));
+                    });
+
+                    cy.edges().on('mouseover', function(e) {
+                        let edge = e.target;
+                        let color = theme === "dark" ? '#ffffff' : '#000000';
+                        edge.style('line-color', color);
+
+                        let src = edge.source();
+                        let tgt = edge.target();
+
+                        if (src.data('type') === 'file') {
+                            src.data('original-bg-color', src.style('background-color'));
+                            src.style('background-color', edge.data('color'));
+                        }
+
+                        if (tgt.data('type') === 'file') {
+                            tgt.data('original-bg-color', src.style('background-color'));
+                            tgt.style('background-color', edge.data('color'));
+                        }
+                    });
+
+                    cy.edges().on('mouseout', function(e) {
+                        let edge = e.target;
+                        edge.style('line-color', edge.data('color'));
+
+                        let src = edge.source();
+                        let tgt = edge.target();
+
+                        if (src.data('type') === 'file') {
+                            src.style('background-color', src.data('bgColor'));
+                        }
+
+                        if (tgt.data('type') === 'file') {
+                            tgt.style('background-color', tgt.data('bgColor'));
+                        }
                     });
                 }}
                 layout={config.layout}

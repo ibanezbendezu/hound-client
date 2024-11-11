@@ -87,6 +87,41 @@ export const File: React.FC<Props> = ({data}) => {
                     cy.on("click", "edge", (e: any) => {
                         handlePair(e.target.data()).then(r => console.log(r));
                     });
+
+                    cy.edges().on('mouseover', function(e) {
+                        let edge = e.target;
+                        let color = theme === "dark" ? '#ffffff' : '#000000';
+                        edge.style('line-color', color);
+
+                        let src = edge.source();
+                        let tgt = edge.target();
+
+                        if (src.isNode) {
+                            src.data('original-bg-color', src.style('background-color'));
+                            src.style('background-color', edge.data('color'));
+                        }
+
+                        if (tgt.isNode) {
+                            tgt.data('original-bg-color', src.style('background-color'));
+                            tgt.style('background-color', edge.data('color'));
+                        }
+                    });
+
+                    cy.edges().on('mouseout', function(e) {
+                        let edge = e.target;
+                        edge.style('line-color', edge.data('color'));
+
+                        let src = edge.source();
+                        let tgt = edge.target();
+
+                        if (src.isNode) {
+                            src.style('background-color', src.data('bgColor'));
+                        }
+
+                        if (tgt.isNode) {
+                            tgt.style('background-color', tgt.data('bgColor'));
+                        }
+                    });
                 }}
                 layout={config.layout}
                 styleEnabled={true}
