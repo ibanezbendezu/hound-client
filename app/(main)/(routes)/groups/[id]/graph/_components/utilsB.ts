@@ -1,6 +1,6 @@
 import {scaleLinear} from 'd3-scale';
 
-export function groupCytoscape(data: any) {
+export function groupCytoscape(data: any, theme: string) {
     interface NodeData {
         id: string;
         label: string;
@@ -37,7 +37,7 @@ export function groupCytoscape(data: any) {
     const nodes: Node[] = [];
     const edges: Edge[] = [];
 
-    const colorScale = scaleLinear<string>().domain([0, 100]).range(["#2E9335", "#B82318"]);
+    const colorScale = theme === 'dark' ? scaleLinear<string>().domain([0, 100]).range(["#2E9335", "#B82318"]) : scaleLinear<string>().domain([0, 100]).range(["#62bc4e", "#cd4843"]);
     const maxRepoFontSize = 35;
     const minRepoFontSize = 27;
     const layerFontSize = 20;

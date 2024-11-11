@@ -7,9 +7,10 @@ import {groupDataRequestBySha, groupGraphRequest} from "@/api/server-data";
 //import {groupCytoscape} from "./_components/utils";
 import { GroupB } from "./_components/groupB";
 import { groupCytoscape } from './_components/utilsB';
+import {useTheme} from "next-themes";
 
 export default function GraphPage({params}: { params: any }) {
-
+    const {theme} = useTheme() as { theme: string };
     const [data, setData] = useState<{ data: any }[] | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -17,7 +18,7 @@ export default function GraphPage({params}: { params: any }) {
         const fetchData = async () => {
             const res = await groupGraphRequest(params.id);
 
-            const cytoscapeFormat = groupCytoscape(res.data)
+            const cytoscapeFormat = groupCytoscape(res.data, theme || '');
             const elements = [
                 ...cytoscapeFormat.nodes.map(node => ({data: node.data})),
                 ...cytoscapeFormat.edges.map(edge => ({data: edge.data}))
@@ -28,7 +29,7 @@ export default function GraphPage({params}: { params: any }) {
         };
 
         fetchData().then(r => r);
-    }, [params.id]);
+    }, [params.id, theme]);
 
     if (loading) {
         return (
