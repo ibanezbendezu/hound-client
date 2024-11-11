@@ -16,6 +16,7 @@ import { TooltipHint } from "@/components/tooltip-hint";
 import { GroupChart } from "../_components/group-chart";
 import { GroupInfoPopover } from "../_components/group-info-popover";
 import { GroupAccordion } from "../_components/group-accordion";
+import useThreshold from "@/store/threshold";
 
 interface Group {
     id: string;
@@ -30,7 +31,8 @@ interface Group {
 export default function GroupPage({params}: { params: any }) {
     const [overallData, setOverallData] = useState<any>([]);
     const [loading, setLoading] = useState(true);
-    const [threshold, setThreshold] = useState(0.75);
+    const {value} = useThreshold();
+    console.log(value);
 
     const router = useRouter();
     const pathname = usePathname()
@@ -143,11 +145,11 @@ export default function GroupPage({params}: { params: any }) {
                 <p className="text-sm font-normal text-muted-foreground">
                     Resumen de los repositorios comparados.
                 </p>
-                <GroupInfoPopover threshold={threshold}/>
+                <GroupInfoPopover threshold={value}/>
             </div>
             
             <div className="flex items-center gap-2 w-full">
-                <GroupAccordion groupId={params.id} threshold={threshold}/>
+                <GroupAccordion groupId={params.id} threshold={value}/>
             </div>
         </div>
     );

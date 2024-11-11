@@ -25,7 +25,7 @@ export function groupCytoscape(data: any, theme: string) {
         sourceName: string;
         targetName: string;
         color: string;
-        similarity: string;
+        similarity: number;
         impact?: number;
         width?: number;
         label?: string;
@@ -38,7 +38,7 @@ export function groupCytoscape(data: any, theme: string) {
     const nodes: Node[] = [];
     const edges: Edge[] = [];
 
-    const colorScale = theme === 'dark' ? scaleLinear<string>().domain([0, 100]).range(["#2E9335", "#B82318"]) : scaleLinear<string>().domain([0, 100]).range(["#62bc4e", "#cd4843"]);
+    const colorScale = theme === 'dark' || theme === 'system' ? scaleLinear<string>().domain([0, 100]).range(["#2E9335", "#B82318"]) : scaleLinear<string>().domain([0, 100]).range(["#62bc4e", "#cd4843"]);
     const maxRepoFontSize = 35;
     const minRepoFontSize = 27;
     const layerFontSize = 20;
@@ -118,7 +118,7 @@ export function groupCytoscape(data: any, theme: string) {
                                     target: targetFileId,
                                     sourceName: file.name,
                                     targetName: pair.filepath.split('/').pop(),
-                                    similarity: Math.round(pair.similarity * 100) + '%',
+                                    similarity: Math.round(pair.similarity * 100),
                                     label: "S:" + Math.round(pair.similarity * 100) + '% | I: ' + Math.round(pair.normalizedImpact * 100) + '%',
                                     color: colorScale(pair.similarity * 100),
                                     impact: pair.normalizedImpact,
@@ -164,7 +164,7 @@ export function fileCytoscape(data: any, theme: string) {
         sourceName: string;
         targetName: string;
         color: string;
-        similarity: string;
+        similarity: number;
         impact?: number;
         width?: number;
 
@@ -178,7 +178,7 @@ export function fileCytoscape(data: any, theme: string) {
     const nodes: Node[] = [];
     const edges: Edge[] = [];
 
-    const colorScale = theme === 'dark' ? scaleLinear<string>().domain([0, 100]).range(["#2E9335", "#B82318"]) : scaleLinear<string>().domain([0, 100]).range(["#62bc4e", "#cd4843"]);
+    const colorScale = theme === 'dark' || theme === 'system' ? scaleLinear<string>().domain([0, 100]).range(["#2E9335", "#B82318"]) : scaleLinear<string>().domain([0, 100]).range(["#62bc4e", "#cd4843"]);
 
     const maxRepoFontSize = 35;
     const minRepoFontSize = 27;
@@ -261,7 +261,7 @@ export function fileCytoscape(data: any, theme: string) {
 
                     sourceName: sourceName,
                     targetName: fileName,
-                    similarity: Math.round(similarity) + '%',
+                    similarity: Math.round(similarity),
                     label: "S:" + Math.round(similarity) + '% | I: ' + Math.round(pair.normalizedImpact * 100) + '%',
                     color: colorScale(similarity),
                     impact: pair.normalizedImpact,

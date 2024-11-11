@@ -25,6 +25,7 @@ import {fileCytoscape} from './utilsB';
 import {Legend} from './legends';
 
 import {useTheme} from "next-themes";
+import useThreshold from "@/store/threshold";
 
 //expandCollapse(cytoscape, jquery);
 cytoscape.use(dagre);
@@ -39,9 +40,10 @@ cytoscape.use(popper);
 type GroupProps = {
     data: any;
     groupId: any;
+    threshold: number;
 };
 
-export const GroupB: React.FC<GroupProps> = ({data, groupId}) => {
+export const GroupB: React.FC<GroupProps> = ({data, groupId, threshold}) => {
     const [cy, setCy] = useState<any>(null);
     const [layoutName, setLayoutName] = useState("cola");
 
@@ -52,6 +54,7 @@ export const GroupB: React.FC<GroupProps> = ({data, groupId}) => {
     const [graphData, setGraphData] = useState<any>(null);
 
     const {theme} = useTheme();
+    const {value} = useThreshold();
 
     const handlePair = async (e: any) => {
         const pairId = parseInt(e.id.split("-")[1], 10);

@@ -90,7 +90,7 @@ export const File: React.FC<Props> = ({data}) => {
 
                     cy.edges().on('mouseover', function(e) {
                         let edge = e.target;
-                        let color = theme === "dark" ? '#ffffff' : '#000000';
+                        let color = theme === "dark" || theme === "system" ? '#ffffff' : '#000000';
                         edge.style('line-color', color);
 
                         let src = edge.source();

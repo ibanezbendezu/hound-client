@@ -41,7 +41,7 @@ export default function GraphPage({params}: { params: any }) {
 
     return (
         <div className="min-h-full flex flex-col dark:bg-[#1F1F1F]">
-            {data && <GroupB data={data} groupId={params.id}/>}
+            {data && <GroupB data={data} groupId={params.id} threshold={75}/>}
         </div>
     );
 };
