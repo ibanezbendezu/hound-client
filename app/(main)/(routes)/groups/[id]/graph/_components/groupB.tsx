@@ -1,6 +1,9 @@
 "use client"
 
-import React, {useState, useEffect} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
+
 import cytoscape from 'cytoscape';
 import CytoscapeComponent from "react-cytoscapejs";
 import dagre from "cytoscape-dagre";
@@ -13,6 +16,7 @@ import navigator from "cytoscape-navigator";
 import {graphStyles2, graphStylesLight} from './styleB';
 import "cytoscape-navigator/cytoscape.js-navigator.css";
 import "./style.css";
+import { Button } from 'semantic-ui-react';
 
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
@@ -35,7 +39,17 @@ cytoscape.use(undoRedo);
 cytoscape.use(expandCollapse);
 cytoscape.use(popper);
 cytoscape.use(navigator);
-cytoscape.use(popper);
+
+const ReactButton = () => {
+    return <Button type="button">React Button</Button>;
+};
+
+const createContentFromComponent = (component: any) => {
+    const dummyDomEle = document.createElement('div');
+    const root = createRoot(dummyDomEle);
+    root.render(component);
+    return dummyDomEle;
+};
 
 type GroupProps = {
     data: any;
@@ -55,6 +69,7 @@ export const GroupB: React.FC<GroupProps> = ({data, groupId, threshold}) => {
 
     const {theme} = useTheme();
     const {value} = useThreshold();
+    const cyPopperRef = useRef(null);
 
     const handlePair = async (e: any) => {
         const pairId = parseInt(e.id.split("-")[1], 10);
@@ -158,7 +173,7 @@ export const GroupB: React.FC<GroupProps> = ({data, groupId, threshold}) => {
 
                     cy.edges().on('mouseover', function(e) {
                         let edge = e.target;
-                        let color = theme === "dark" ? '#ffffff' : '#000000';
+                        let color = theme === "dark" || theme === "system" ? '#ffffff' : '#000000';
                         edge.style('line-color', color);
 
                         let src = edge.source();
@@ -238,6 +253,58 @@ export const GroupB: React.FC<GroupProps> = ({data, groupId, threshold}) => {
                                 node.data('show', true);
                                 node.show();
                             }
+                        }
+                    });
+
+                    cy.nodes().on('mouseover', function(e) {
+                        const node = e.target;
+                        if (node.data('type') === 'file') {
+                            let bgColor = theme === "dark" || theme === "system" ? '#151515' : '#9f9f9f';
+                            node.style('background-color', bgColor);
+                            let color = theme === "dark" || theme === "system" ? '#ffffff' : '#000000';
+                            node.connectedEdges().forEach((edge: any) => {
+                                edge.style('line-color', color);
+                                edge.connectedNodes().forEach((connectedNode: any) => {
+                                    if (edge.data('similarity') >= value) {
+                                        if (connectedNode.data('type') === 'file' && connectedNode.data('id') !== node.data('id')) {
+                                            connectedNode.style('background-color', edge.data('color'));
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                    });
+
+                    cy.nodes().on('mouseout', function(e) {
+                        const node = e.target;
+                        if (node.data('type') === 'file') {
+                            node.style('background-color', node.data('bgColor'));
+                            node.connectedEdges().forEach((edge: any) => {
+                                edge.style('line-color', edge.data('color'));
+                                edge.connectedNodes().forEach((connectedNode: any) => {
+                                    if (connectedNode.data('type') === 'file' && connectedNode.data('id') !== node.data('id')) {
+                                        connectedNode.style('background-color', connectedNode.data('bgColor'));
+                                    }
+                                });
+                            });
+                        }
+                    });
+
+                    cy.edges().on('mouseover', (event) => {
+                        if (event.target.popper) {
+                            cyPopperRef.current = event.target.popper({
+                                content: createContentFromComponent(<ReactButton />),
+                                popper: {
+                                    placement: 'right',
+                                    removeOnDestroy: true,
+                                },
+                            });
+                        }
+                    });
+
+                    cy.edges().on('mouseout', () => {
+                        if (cyPopperRef.current) {
+                            (cyPopperRef.current as any).destroy();
                         }
                     });
                 }}

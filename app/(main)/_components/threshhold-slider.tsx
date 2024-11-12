@@ -34,7 +34,7 @@ export function ThresholdSlider({ className, ...props }: SliderProps) {
                     type="number"
                     value={Math.round(value * 100)}
                     onChange={handleInputChange}
-                    className="w-10 h-6 text-xs text-center font-mono p-0"
+                    className="w-10 h-5 text-xs text-center font-mono p-0"
                 />
                 <span className="text-muted-foreground text-sm font-mono">%</span>
             </div>
