@@ -203,11 +203,45 @@ export const GroupB: React.FC<GroupProps> = ({data, groupId, threshold}) => {
                             const showSrc = src.connectedEdges().some((edge: any) => edge.data('show'));
                             const showTgt = tgt.connectedEdges().some((edge: any) => edge.data('show'));
 
+                            src.data('show', showSrc);
+                            tgt.data('show', showTgt);
+
                             showSrc ? src.show() : src.hide();
                             showTgt ? tgt.show() : tgt.hide();
                         }
                     });
+
+                    cy.nodes().forEach((node: any) => {
+                        if (node.data('type') === 'layer') {
+                            const children = node.children();
+                            const allChildrenHidden = children.every((child: any) => !child.data('show'));
+
+                            if (allChildrenHidden) {
+                                node.data('show', false);
+                                node.hide();
+                            } else {
+                                node.data('show', true);
+                                node.show();
+                            }
+                        }
+                    });
+
+                    cy.nodes().forEach((node: any) => {
+                        if (node.data('type') === 'repository') {
+                            const children = node.children();
+                            const allChildrenHidden = children.every((child: any) => !child.data('show'));
+
+                            if (allChildrenHidden) {
+                                node.data('show', false);
+                                node.hide();
+                            } else {
+                                node.data('show', true);
+                                node.show();
+                            }
+                        }
+                    });
                 }}
+
                 layout={config.layout}
                 stylesheet={theme === "dark" ? graphStyles2 : graphStylesLight}
                 elements={data}

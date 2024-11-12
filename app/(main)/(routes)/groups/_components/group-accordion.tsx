@@ -65,8 +65,8 @@ export const GroupAccordion = ({groupId, threshold} : {groupId: string, threshol
 
             setGroup(data);
         }
-        fetchData();
-    } , [groupId]);
+        fetchData().then(r => r);
+    } , [groupId, threshold]);
 
     const onSelect = (id: string) => {
         router.push(pathname + `/files/${id}`);

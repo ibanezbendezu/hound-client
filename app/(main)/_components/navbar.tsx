@@ -36,7 +36,7 @@ export const Navbar = ({isCollapsed, onResetWidth}: NavbarProps) => {
                 )}
             </div>
 
-            {pathname.includes("groups") && (
+            {pathname.includes("groups") && !pathname.includes("file") && (
                 <div className="ml-auto w-1/3">
                     <ThresholdSlider/>
                 </div>

@@ -96,7 +96,7 @@ export const Item = ({
                             >
                                 <DropdownMenuItem onClick={onDelete}>
                                     <Trash className="h-4 w-4 mr-2" />
-                                    Delete
+                                    Eliminar
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>

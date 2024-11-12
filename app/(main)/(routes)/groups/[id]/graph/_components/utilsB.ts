@@ -60,7 +60,9 @@ export function groupCytoscape(data: any, theme: string) {
                 id: repoId,
                 label: repo.owner + "/" + repo.name,
                 type: 'repository',
-                fontSize: Math.min(Math.max(minRepoFontSize, maxRepoFontSize * (repo.layers.reduce((acc: number, layer: any) => acc + layer.files.length, 0) / largestRepo)), maxRepoFontSize)
+                fontSize: Math.min(Math.max(minRepoFontSize, maxRepoFontSize * (repo.layers.reduce((acc: number, layer: any) => acc + layer.files.length, 0) / largestRepo)), maxRepoFontSize),
+                sha: repo.sha,
+                show: true
             }
         });
     
@@ -73,7 +75,8 @@ export function groupCytoscape(data: any, theme: string) {
                     parent: repoId,
                     type: 'layer',
                     layer: layer.layer,
-                    fontSize: layerFontSize
+                    fontSize: layerFontSize,
+                    show: true
                 }
             });
     
@@ -153,6 +156,7 @@ export function fileCytoscape(data: any, theme: string) {
         height?: number;
         fontSize?: number;
         bgColor?: string;
+        show?: boolean;
     }
 
     interface Node {
@@ -213,7 +217,8 @@ export function fileCytoscape(data: any, theme: string) {
             width: width,
             height: height,
             fontSize: fontSize,
-            bgColor: ""
+            bgColor: "",
+            show: true
         }
     });
 
@@ -224,7 +229,9 @@ export function fileCytoscape(data: any, theme: string) {
                 id: repoId,
                 label: repo.name,
                 type: 'repository',
-                fontSize: Math.min(Math.max(minRepoFontSize, maxRepoFontSize * (repo.pairs.length / largestRepo)), maxRepoFontSize)
+                fontSize: Math.min(Math.max(minRepoFontSize, maxRepoFontSize * (repo.pairs.length / largestRepo)), maxRepoFontSize),
+                sha: repo.sha,
+                show: true
             }
         });
 
@@ -250,7 +257,8 @@ export function fileCytoscape(data: any, theme: string) {
                     width: width,
                     height: height,
                     fontSize: fontSize,
-                    bgColor: ""
+                    bgColor: "",
+                    show: true
                 }
             });
 

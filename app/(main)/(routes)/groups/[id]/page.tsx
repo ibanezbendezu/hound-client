@@ -145,11 +145,11 @@ export default function GroupPage({params}: { params: any }) {
                 <p className="text-sm font-normal text-muted-foreground">
                     Resumen de los repositorios comparados.
                 </p>
-                <GroupInfoPopover threshold={value}/>
+                <GroupInfoPopover threshold={0.75}/>
             </div>
             
             <div className="flex items-center gap-2 w-full">
-                <GroupAccordion groupId={params.id} threshold={value}/>
+                <GroupAccordion groupId={params.id} threshold={0.75}/>
             </div>
         </div>
     );
