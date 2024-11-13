@@ -17,6 +17,7 @@ import "./style.css";
 
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
+import {cn} from "@/lib/utils";
 
 import {FileDialog} from '@/app/(main)/(routes)/groups/[id]/graph/_components/file-dialog';
 import {PairDialog} from '@/app/(main)/(routes)/groups/[id]/graph/_components/pair-dialog';
