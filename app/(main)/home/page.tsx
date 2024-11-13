@@ -18,7 +18,7 @@ const Home = () => {
                     </kbd>
                 </h2>
             </div>
-            <div className="py-4 flex items-center gap-2">
+            <div className="pb-2 pt-4 flex items-center gap-2">
                 <ArrowUpLeft className="h-5 w-5 text-current"/>
                 <p className="text-sm font-normal text-muted-foreground">
                     Puedes buscar proyectos Spring Boot haciendo click allí.
@@ -31,6 +31,7 @@ const Home = () => {
                 <SearchCode className="h-5 w-5 text-current"/>
             </div>
             <div className="py-2 flex items-center gap-2">
+                <ArrowUpLeft className="h-5 w-5 text-current"/>
                 <p className="text-sm font-normal text-muted-foreground">
                     También puedes ingresar tu lista de repositorios (URLs) para ser seleccionados.
                 </p>

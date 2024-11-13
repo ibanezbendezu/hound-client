@@ -1,8 +1,6 @@
 "use client"
 
-import React, { useEffect, useRef, useState } from 'react';
-import ReactDOM from 'react-dom';
-import { createRoot } from 'react-dom/client';
+import React, {useEffect, useRef, useState} from 'react';
 
 import cytoscape from 'cytoscape';
 import CytoscapeComponent from "react-cytoscapejs";
@@ -11,12 +9,11 @@ import fcose from "cytoscape-fcose";
 import cola from 'cytoscape-cola';
 import undoRedo from "cytoscape-undo-redo";
 import expandCollapse from 'cytoscape-expand-collapse';
-import popper from 'cytoscape-popper';
+import cytoscapePopper from 'cytoscape-popper';
 import navigator from "cytoscape-navigator";
 import {graphStyles2, graphStylesLight} from './styleB';
 import "cytoscape-navigator/cytoscape.js-navigator.css";
 import "./style.css";
-import { Button } from 'semantic-ui-react';
 
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
@@ -24,7 +21,7 @@ import 'tippy.js/dist/tippy.css';
 import {FileDialog} from '@/app/(main)/(routes)/groups/[id]/graph/_components/file-dialog';
 import {PairDialog} from '@/app/(main)/(routes)/groups/[id]/graph/_components/pair-dialog';
 
-import {pairsByGroupShaDataRequest, pairByIdDataRequest} from '@/api/server-data';
+import {pairByIdDataRequest, pairsByGroupShaDataRequest} from '@/api/server-data';
 import {fileCytoscape} from './utilsB';
 import {Legend} from './legends';
 
@@ -37,19 +34,29 @@ cytoscape.use(cola);
 cytoscape.use(fcose);
 cytoscape.use(undoRedo);
 cytoscape.use(expandCollapse);
-cytoscape.use(popper);
 cytoscape.use(navigator);
 
-const ReactButton = () => {
-    return <Button type="button">React Button</Button>;
-};
+function tippyFactory(ref: any, content: any){
+    let dummyDomEle = document.createElement('div');
 
-const createContentFromComponent = (component: any) => {
-    const dummyDomEle = document.createElement('div');
-    const root = createRoot(dummyDomEle);
-    root.render(component);
-    return dummyDomEle;
-};
+    return tippy(dummyDomEle, {
+        getReferenceClientRect: ref.getBoundingClientRect,
+        trigger: 'manual', // mandatory
+        // dom element inside the tippy:
+        content: content,
+        // your own preferences:
+        arrow: true,
+        placement: 'bottom',
+        hideOnClick: false,
+        sticky: "reference",
+
+        // if interactive:
+        interactive: true,
+        appendTo: document.body // or append dummyDomEle to document.body
+    });
+}
+
+cytoscape.use(cytoscapePopper(tippyFactory));
 
 type GroupProps = {
     data: any;
@@ -263,14 +270,14 @@ export const GroupB: React.FC<GroupProps> = ({data, groupId, threshold}) => {
                             node.style('background-color', bgColor);
                             let color = theme === "dark" || theme === "system" ? '#ffffff' : '#000000';
                             node.connectedEdges().forEach((edge: any) => {
-                                edge.style('line-color', color);
-                                edge.connectedNodes().forEach((connectedNode: any) => {
-                                    if (edge.data('similarity') >= value) {
+                                if (edge.data('similarity') >= value) {
+                                    edge.style('line-color', color);
+                                    edge.connectedNodes().forEach((connectedNode: any) => {
                                         if (connectedNode.data('type') === 'file' && connectedNode.data('id') !== node.data('id')) {
                                             connectedNode.style('background-color', edge.data('color'));
                                         }
-                                    }
-                                });
+                                    });
+                                }
                             });
                         }
                     });
@@ -290,23 +297,33 @@ export const GroupB: React.FC<GroupProps> = ({data, groupId, threshold}) => {
                         }
                     });
 
-                    cy.edges().on('mouseover', (event) => {
-                        if (event.target.popper) {
-                            cyPopperRef.current = event.target.popper({
-                                content: createContentFromComponent(<ReactButton />),
-                                popper: {
-                                    placement: 'right',
-                                    removeOnDestroy: true,
-                                },
-                            });
-                        }
+                    cy.edges().on('mouseover', function(e) {
+                        let edge = e.target;
+                        let content = document.createElement('div');
+                        content.innerHTML = `
+                             <div style="text-align: center;">
+                                <strong>${edge.data('sourceName')}</strong><br>
+                                <><br>
+                                <strong>${edge.data('targetName')}</strong><br>
+                                Similitud: ${Math.round(edge.data('similarity') * 100)}%
+                                <div style="width: 20px; height: 10px; background-color: ${edge.data('color')}; border-radius: 10%; display: inline-block; margin: 5px auto 0;"></div>
+                            </div>
+                        `;
+
+                        let tip = edge.popper({
+                            content: () => content,
+                            popper: {
+                                placement: 'auto',
+                            }
+                        });
+
+                        tip.show();
+
+                        edge.on('mouseout', function() {
+                            tip.hide();
+                        });
                     });
 
-                    cy.edges().on('mouseout', () => {
-                        if (cyPopperRef.current) {
-                            (cyPopperRef.current as any).destroy();
-                        }
-                    });
                 }}
 
                 layout={config.layout}

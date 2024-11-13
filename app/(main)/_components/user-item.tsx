@@ -74,7 +74,7 @@ export const UserItem = () => {
                 <DropdownMenuItem onClick={handleLogout}>
                     <div className="flex items-center">
                         <LogOut className="text-xs"/>
-                        <DropdownMenuLabel className="text-xs">Logout</DropdownMenuLabel>
+                        <DropdownMenuLabel className="text-xs">Cerrar Sesión</DropdownMenuLabel>
                     </div>
                 </DropdownMenuItem>
 

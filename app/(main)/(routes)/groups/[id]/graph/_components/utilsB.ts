@@ -121,13 +121,13 @@ export function groupCytoscape(data: any, theme: string) {
                                     id: `edge-${pair.id}`,
                                     source: fileId,
                                     target: targetFileId,
-                                    sourceName: file.name,
+                                    sourceName: file.filepath.split('/').pop(),
                                     targetName: pair.filepath.split('/').pop(),
                                     similarity: pair.similarity,
                                     label: "S:" + Math.round(pair.similarity * 100) + '% | I: ' + Math.round(pair.normalizedImpact * 100) + '%',
                                     color: colorScale(pair.similarity * 100),
                                     impact: pair.normalizedImpact,
-                                    width: (Math.pow(pair.normalizedImpact, 6) * 4) + 1.5,
+                                    width: (Math.pow(pair.normalizedImpact, 6) * 4) + 1.7,
                                 },
                             });
                         }
