@@ -30,6 +30,8 @@ export function groupCytoscape(data: any, theme: string) {
         impact?: number;
         width?: number;
         label?: string;
+        longest?: number;
+        totalOverlap?: number;
     }
 
     interface Edge {
@@ -127,6 +129,8 @@ export function groupCytoscape(data: any, theme: string) {
                                     label: "S:" + Math.round(pair.similarity * 100) + '% | I: ' + Math.round(pair.normalizedImpact * 100) + '%',
                                     color: colorScale(pair.similarity * 100),
                                     impact: pair.normalizedImpact,
+                                    totalOverlap: pair.totalOverlap,
+                                    longest: pair.longestFragment,
                                     width: (Math.pow(pair.normalizedImpact, 6) * 4) + 1.7,
                                 },
                             });
@@ -175,6 +179,8 @@ export function fileCytoscape(data: any, theme: string) {
         width?: number;
 
         label?: string;
+        longest?: number;
+        totalOverlap?: number;
     }
 
     interface Edge {
@@ -275,6 +281,8 @@ export function fileCytoscape(data: any, theme: string) {
                     label: "S:" + Math.round(similarity) + '% | I: ' + Math.round(pair.normalizedImpact * 100) + '%',
                     color: colorScale(similarity),
                     impact: pair.normalizedImpact,
+                    totalOverlap: pair.totalOverlap,
+                    longest: pair.longestFragment,
                     width: (Math.pow(pair.normalizedImpact, 6) * 4) + 1.5,
                 },
             });

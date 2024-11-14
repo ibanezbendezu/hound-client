@@ -22,3 +22,12 @@
 .cytoscape-navigator.mouseover-view .cytoscape-navigatorView {
     background-color: rgb(14, 14, 14);
 }
+
+.tippy-box[data-theme~='custom'] {
+    background-color: hsl(var(--background)); /* Cambia este color al que desees */
+    border-radius: 5px;
+}
+
+.tippy-box[data-theme~='custom'] .tippy-arrow {
+    color: hsl(var(--background)); /* Cambia este color al que desees */
+}

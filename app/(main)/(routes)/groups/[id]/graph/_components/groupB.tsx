@@ -28,6 +28,8 @@ import {Legend} from './legends';
 
 import {useTheme} from "next-themes";
 import useThreshold from "@/store/threshold";
+import {GitCompareArrows} from "lucide-react";
+import ReactDOMServer from 'react-dom/server';
 
 //expandCollapse(cytoscape, jquery);
 cytoscape.use(dagre);
@@ -47,13 +49,16 @@ function tippyFactory(ref: any, content: any){
         content: content,
         // your own preferences:
         arrow: true,
-        placement: 'bottom',
+        placement: 'auto',
         hideOnClick: false,
         sticky: "reference",
 
         // if interactive:
         interactive: true,
-        appendTo: document.body // or append dummyDomEle to document.body
+        appendTo: document.body, // or append dummyDomEle to document.body
+
+        theme: 'custom',
+        followCursor: 'initial'
     });
 }
 
@@ -302,12 +307,25 @@ export const GroupB: React.FC<GroupProps> = ({data, groupId, threshold}) => {
                         let edge = e.target;
                         let content = document.createElement('div');
                         content.innerHTML = `
-                             <div style="text-align: center;">
-                                <strong>${edge.data('sourceName')}</strong><br>
-                                <><br>
-                                <strong>${edge.data('targetName')}</strong><br>
-                                Similitud: ${Math.round(edge.data('similarity') * 100)}%
-                                <div style="width: 20px; height: 10px; background-color: ${edge.data('color')}; border-radius: 10%; display: inline-block; margin: 5px auto 0;"></div>
+                            <div class="text-left p-1 bg-background rounded shadow-md">
+                                <div class="block text-xs">${edge.data('sourceName')}</div>
+                                <div class="shrink-0">
+                                    ${ReactDOMServer.renderToString(<GitCompareArrows size={15} className="inline-block text-muted-foreground" />)}
+                                </div>
+                                <div class="block text-xs">${edge.data('targetName')}</div>
+                                <div class="flex items-center mt-2 align-middle text-xs text-muted-foreground">
+                                    <div class="h-3 w-3 mr-2 rounded-[2px]" style="background-color: ${edge.data('color')}"></div>
+                                    <span>Similitud: ${Math.round(edge.data('similarity') * 100)}%</span>
+                                </div>
+                                <div class="flex items-center mt-2 align-middle text-xs text-muted-foreground">
+                                    <span>Longest: ${edge.data('longest')}</span>
+                                </div>
+                                <div class="flex items-center mt-2 align-middle text-xs text-muted-foreground">
+                                    <span>S. Total: ${edge.data('totalOverlap')}</span>
+                                </div>
+                                <div class="flex items-center mt-2 align-middle text-xs text-muted-foreground">
+                                    <span>Impacto: ${Math.round(edge.data('impact') * 100)}%</span>
+                                </div>
                             </div>
                         `;
 
