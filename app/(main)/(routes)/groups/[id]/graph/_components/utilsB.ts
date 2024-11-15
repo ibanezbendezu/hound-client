@@ -32,6 +32,8 @@ export function groupCytoscape(data: any, theme: string) {
         label?: string;
         longest?: number;
         totalOverlap?: number;
+        sourceRepo?: string;
+        targetRepo?: string;
     }
 
     interface Edge {
@@ -132,6 +134,9 @@ export function groupCytoscape(data: any, theme: string) {
                                     totalOverlap: pair.totalOverlap,
                                     longest: pair.longestFragment,
                                     width: (Math.pow(pair.normalizedImpact, 6) * 4) + 1.7,
+
+                                    sourceRepo: repo.name,
+                                    targetRepo: pair.repositoryName,
                                 },
                             });
                         }

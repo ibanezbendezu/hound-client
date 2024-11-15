@@ -307,24 +307,36 @@ export const GroupB: React.FC<GroupProps> = ({data, groupId, threshold}) => {
                         let edge = e.target;
                         let content = document.createElement('div');
                         content.innerHTML = `
-                            <div class="text-left p-1 bg-background rounded shadow-md">
-                                <div class="block text-xs">${edge.data('sourceName')}</div>
+                            <div class="text-left p-1 rounded shadow-sm">
+                                <div class="block text-xs text-primary">${edge.data('sourceName')}</div>
+                                <div class="block text-[11px] text-muted-foreground/70">${edge.data('sourceRepo')}</div>
                                 <div class="shrink-0">
                                     ${ReactDOMServer.renderToString(<GitCompareArrows size={15} className="inline-block text-muted-foreground" />)}
                                 </div>
-                                <div class="block text-xs">${edge.data('targetName')}</div>
-                                <div class="flex items-center mt-2 align-middle text-xs text-muted-foreground">
-                                    <div class="h-3 w-3 mr-2 rounded-[2px]" style="background-color: ${edge.data('color')}"></div>
-                                    <span>Similitud: ${Math.round(edge.data('similarity') * 100)}%</span>
-                                </div>
-                                <div class="flex items-center mt-2 align-middle text-xs text-muted-foreground">
-                                    <span>Longest: ${edge.data('longest')}</span>
-                                </div>
-                                <div class="flex items-center mt-2 align-middle text-xs text-muted-foreground">
-                                    <span>S. Total: ${edge.data('totalOverlap')}</span>
-                                </div>
-                                <div class="flex items-center mt-2 align-middle text-xs text-muted-foreground">
-                                    <span>Impacto: ${Math.round(edge.data('impact') * 100)}%</span>
+                                <div class="block text-xs text-primary">${edge.data('targetName')}</div>
+                                <div class="block text-[11px] text-muted-foreground/70">${edge.data('targetRepo')}</div>
+                                
+                                <div class="border-t border-muted-foreground/70 my-2"></div>
+                                
+                                <div class="flex">
+                                    <div class="flex flex-col mr-4">
+                                        <div class="flex items-center mt-2 align-middle text-xs text-muted-foreground">
+                                            <div class="h-3 w-3 mr-2 rounded-[2px]" style="background-color: ${edge.data('color')}"></div>
+                                            <span>Similitud: ${Math.round(edge.data('similarity') * 100)}%</span>
+                                        </div>
+                                        <div class="flex items-center mt-2 align-middle text-xs text-muted-foreground">
+                                            <div class="h-3 w-3 mr-2 rounded-[2px] bg-muted-foreground"></div>
+                                            <span>Impacto: ${Math.round(edge.data('impact') * 100)}%</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <div class="flex items-center mt-2 align-middle text-xs text-muted-foreground">
+                                            <span>Longest: ${edge.data('longest')}</span>
+                                        </div>
+                                        <div class="flex items-center mt-2 align-middle text-xs text-muted-foreground">
+                                            <span>S. Total: ${edge.data('totalOverlap')}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         `;

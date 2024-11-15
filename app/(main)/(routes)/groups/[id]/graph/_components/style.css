@@ -24,10 +24,10 @@
 }
 
 .tippy-box[data-theme~='custom'] {
-    background-color: hsl(var(--background)); /* Cambia este color al que desees */
+    background-color: hsl(var(--background));
     border-radius: 5px;
 }
 
 .tippy-box[data-theme~='custom'] .tippy-arrow {
-    color: hsl(var(--background)); /* Cambia este color al que desees */
+    color: hsl(var(--background));
 }
