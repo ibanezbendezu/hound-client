@@ -8,11 +8,11 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { Badge } from '../../../../../../../components/ui/badge';
-import { Label } from '../../../../../../../components/ui/label';
-import { Progress } from '../../../../../../../components/ui/progress';
-import { CodeViewer } from '../../../../../../../components/code-viewer';
-import { Spinner } from '../../../../../../../components/spinner';
+import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
+import { Progress } from '@/components/ui/progress';
+import { CodeViewer } from '@/components/code-viewer';
+import { Spinner } from '@/components/spinner';
 import { GitCompareArrows } from 'lucide-react';
 
 interface PairDialogProps {
@@ -28,7 +28,6 @@ export function PairDialog({ isOpen, setIsOpen, pair }: PairDialogProps) {
     const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        // Solo ejecutar si el diálogo está abierto y pair está definido
         if (!isOpen || !pair?.file1?.id || !pair?.file2?.id) return;
 
         let isMounted = true;
@@ -56,7 +55,7 @@ export function PairDialog({ isOpen, setIsOpen, pair }: PairDialogProps) {
             }
         };
 
-        fetchData();
+        fetchData().then(r => r);
 
         return () => {
             isMounted = false;
