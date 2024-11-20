@@ -61,14 +61,14 @@ export default function HoundCarousel() {
                             <Card>
                                 <CardContent className='flex items-center justify-center p-2'>
                                     <Image
-                                        src="/light_graph.png"
+                                        src="/l-graph.png"
                                         width={1200}
                                         height={400}
                                         alt="Light Graph"
                                         className="aspect-video object-cover rounded-sm dark:hidden"
                                     />
                                     <Image
-                                        src="/dark_graph.png"
+                                        src="/d-graph.png"
                                         width={1200}
                                         height={400}
                                         alt="Dark Graph"
@@ -82,14 +82,14 @@ export default function HoundCarousel() {
                             <Card>
                                 <CardContent className='flex items-center justify-center p-2'>
                                     <Image
-                                        src="/light_pair.png"
+                                        src="/l-code.png"
                                         width={1200}
                                         height={400}
                                         alt="Light Pair"
                                         className="aspect-video object-cover rounded-sm dark:hidden"
                                     />
                                     <Image
-                                        src="/dark_pair.png"
+                                        src="/d-code.png"
                                         width={1200}
                                         height={400}
                                         alt="Dark Pair"
@@ -103,14 +103,14 @@ export default function HoundCarousel() {
                             <Card>
                                 <CardContent className='flex items-center justify-center p-2'>
                                     <Image
-                                        src="/light_summary.png"
+                                        src="/l-report2.png"
                                         width={1200}
                                         height={400}
                                         alt="Light Pair"
                                         className="aspect-video object-cover rounded-sm dark:hidden"
                                     />
                                     <Image
-                                        src="/dark_summary.png"
+                                        src="/d-report2.png"
                                         width={1200}
                                         height={400}
                                         alt="Dark Pair"
